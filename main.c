@@ -82,21 +82,25 @@ void cursorControl()
         {
         	if(column==0)
         	{
+				column=0;
         		system("cls");
         		warMenu();
 			}
 			else if(column==1)
 			{
+				column=0;
 				system("cls");
 				marketMenu();
 			}
 			else if(column==2)
 			{
+				column=0;
 				system("cls");
 				blacksmithMenu();
 			}
 			else if(column==3)
 			{
+				column=0;
 				system("cls");
 				gamblingMenu();
 			}

@@ -67,6 +67,7 @@ void cursorControlWar()
 		}
 		else if(selectedDirection == 'Q' || selectedDirection == 'q')
         {
+			column=0;
         	FirstIntroductionMenu();
 		}
 		else
