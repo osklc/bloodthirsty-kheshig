@@ -47,9 +47,32 @@ A turn-based arena combat game written in C, running in the Windows console term
 
 ---
 
+## � Quick Start
+
+### ⚡ For Everyone: Play Without Installing Anything
+
+**Download and run the compiled executable:**
+
+1. Go to [Releases](https://github.com/osklc/Turn-Based-Arena-Fighter-in-the-C-Terminal/releases)
+2. Download `game.exe` from the latest release
+3. Run it directly:
+```bash
+.\game.exe
+```
+
+**No installation, no compilation needed!** The executable is ready to play.
+
+### For Developers: Build from Source
+
+See [Building](#building) section below to compile the game yourself.
+
+---
+
 ## 📥 Installation
 
-### Prerequisites
+### For Source Code Development
+
+#### Prerequisites
 1. Install MSYS2 from https://www.msys2.org/
 2. Ensure GCC is installed: `gcc --version`
 
