@@ -47,7 +47,7 @@ A turn-based arena combat game written in C, running in the Windows console term
 
 ---
 
-## � Quick Start
+## 🚀 Quick Start
 
 ### ⚡ For Everyone: Play Without Installing Anything
 
