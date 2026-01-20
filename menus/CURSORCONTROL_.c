@@ -5,14 +5,14 @@
 
 #include "CURSORCONTROL_.h"
 
-void cursorControl()
+void cursorControl(char title[])
 {
 	char selectedDirection = '\0';
 	
 	while(selectedDirection != 'F' && selectedDirection != 'f')
 	{
 		system("cls");
-		printf("\033[31m\033[3mBloodthirsty Kheshig\033[0m\n");
+		printf("\033[31m\033[3m%s\033[0m\n", title);
 		PrintBoard();
 		//printf("\nActive Cell: [%d , %d]", row, column); // For Debug
 		printf("\n[A-D] Move  |  [F] Select  |  [Q] Quit");

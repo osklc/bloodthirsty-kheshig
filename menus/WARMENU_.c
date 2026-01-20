@@ -12,4 +12,5 @@ void warMenu()
 	printf("\n\033[36m\033[3mDurability:\033[0m %d",charDurability);
 	printf("\n\033[33m\033[3mGold:\033[0m %d",charGold);
 	printf("\n[A-D] Move  |  [F] Select  |  [Q] Quit");
+	cursorControl("War Menu");
 }

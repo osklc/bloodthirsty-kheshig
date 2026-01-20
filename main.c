@@ -46,7 +46,7 @@ void hideCursor() {
 
 void FirstIntroductionMenu()
 {
-	cursorControl();
+	cursorControl("Bloodthirsty Kheshig");
 }
 
 void PrintBoard()

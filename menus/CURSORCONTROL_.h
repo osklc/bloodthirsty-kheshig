@@ -11,4 +11,4 @@ extern void marketMenu();
 extern void blacksmithMenu();
 extern void gamblingMenu();
 
-void cursorControl();
+void cursorControl(char title[]);
