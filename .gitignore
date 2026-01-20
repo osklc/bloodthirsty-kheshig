@@ -1,11 +1,9 @@
-*.o
 *.win
 *.dev
 *.layout
 *.txt
 *.idea
 *.vscode
-*MakeFile
 *.png
 *.jpg
 *.jpeg
