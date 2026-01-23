@@ -46,7 +46,7 @@ void warPanel()
 	strcpy(viewPlace[0], places[0]);
 	char viewLine[] = "==================================================";
 	char viewHeader[100];
-	sprintf(viewHeader, "BLOODTHIRSTY KHESHIG - %s", viewPlace[0]);
+	sprintf(viewHeader, "     \033[31mBLOODTHIRSTY KHESHIG\033[0m - \033[32m%s\033[0m", viewPlace[0]);
 
 	int viewDiff = strlen(viewLine) - strlen(viewHeader);
 
@@ -89,6 +89,15 @@ void warPanel()
 	printf("%s", enemyHP);
 
 	printf("\n%s\n", viewLine);
+	printf("  In production(LOG)");
+	printf("\n%s\n", viewLine);
+
+	printf("  1. Quick Attack (90%% Accuracy - Low Damage)\n");
+	printf("  2. Heavy Strike (50%% Accuracy - High Damage)\n");
+	printf("  3. Defense (Reduces Damage)\n");
+	printf("  4. Retreat (Escape Battle - Lose Gold)\n");
+
+	printf("%s\n", viewLine);
 
 	getch();
 }
@@ -110,12 +119,12 @@ void cursorControlWar()
 		printf("\n[A-D] Move  |  [F] Select  |  [Q] Back to main menu");
 		selectedDirection = getch();
 		
-        if(selectedDirection == 'A' || selectedDirection == 'a')
+        if(selectedDirection == 'A' || selectedDirection == 'a' || selectedDirection == 75)
         {
             column--;
             if(column < 0) column = 3;
         }
-        else if(selectedDirection == 'D' || selectedDirection == 'd')
+        else if(selectedDirection == 'D' || selectedDirection == 'd' || selectedDirection == 77)
         {
             column++;
             if(column > 3) column = 0;

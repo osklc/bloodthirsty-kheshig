@@ -30,12 +30,12 @@ void cursorControlGambling()
 		printf("\n[A-D] Move  |  [F] Select  |  [Q] Back to main menu");
 		selectedDirection = getch();
 		
-        if(selectedDirection == 'A' || selectedDirection == 'a')
+        if(selectedDirection == 'A' || selectedDirection == 'a' || selectedDirection == 75)
         {
             column--;
             if(column < 0) column = 2;
         }
-        else if(selectedDirection == 'D' || selectedDirection == 'd')
+        else if(selectedDirection == 'D' || selectedDirection == 'd' || selectedDirection == 77)
         {
             column++;
             if(column > 2) column = 0;

@@ -11,6 +11,8 @@ int row=0;
 int column=0;
 char boardMain[4][20] = {"War","Market","Blacksmith","Gambling"};
 
+char viewLine[] = "\n==================================================\n";
+
 struct Player kheshig;
 
 //Prototype
@@ -27,7 +29,7 @@ int main()
 	hideCursor();
 	gotoxy(0,0);
 	printf("\033[31m\033[3mBLOODTHIRSTY KHESHIG\033[0m\n");
-	Sleep(1000);
+	//Sleep(1000);
 
 	if (checkSave() == 0)
 	{
@@ -99,7 +101,8 @@ void cursorControl()
 	while(selectedDirection != 'F' && selectedDirection != 'f')
 	{
 		system("cls");
-		printf("\033[94m\033[3mMAIN MENU\033[0m\n");
+		printf("\033[94m\033[3mMAIN MENU\033[0m");
+		printf("%s",viewLine);
 		printf("\033[91mHealth:\033[0m %d\n",kheshig.health);
 		printf("\033[36m\033[1mLevel:\033[0m %d\n",kheshig.level);
 		printf("\033[33m\033[1mGold:\033[0m %d\n",kheshig.gold);
@@ -110,12 +113,12 @@ void cursorControl()
 		printf("\n[A-D] Move  |  [F] Select  |  [Q] Quit");
 		selectedDirection = getch();
 		
-        if(selectedDirection == 'A' || selectedDirection == 'a')
+        if(selectedDirection == 'A' || selectedDirection == 'a' || selectedDirection == 75)
         {
             column--;
             if(column < 0) column = 3;
         }
-        else if(selectedDirection == 'D' || selectedDirection == 'd')
+        else if(selectedDirection == 'D' || selectedDirection == 'd' || selectedDirection == 77)
         {
             column++;
             if(column > 3) column = 0;
