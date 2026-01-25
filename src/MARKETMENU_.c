@@ -5,7 +5,7 @@
 
 #include "../include/MARKETMENU_.h"
 
-char boardMarket[4][30] = {"Buy Health Potion - 50G","Buy Damage Scroll - 120G","Buy Revive Token - 300G","Sell Items"};
+char boardMarket[4][32] = {"Buy Health Potion - 50G","Buy Damage Scroll(ATK+3) - 120G","Buy ARMOR (DEF+3) - 120G","Sell Items"};
 
 void marketMenu()
 {
@@ -49,22 +49,58 @@ void cursorControlMarket()
         {
         	if(column==0)
         	{
-        		system("cls");
-				healthPotion();
+				if(kheshig.gold<50)
+				{
+					printf("\033[31mYou don't have enough gold!\033[0m");
+					printf("\n%s\n", viewLine);
+					printf("Press any key to return to the main menu.");
+					printf("\n%s\n", viewLine);
+					getch();
+					FirstIntroductionMenu();
+				}
+				kheshig.gold-=50;
+				kheshig.health+=10;
+				gameSave();
+				system("cls");
+				cursorControlMarket();
 			}
 			else if(column==1)
 			{
+				if(kheshig.gold<120)
+				{
+					printf("\033[31mYou don't have enough gold!\033[0m");
+					printf("\n%s\n", viewLine);
+					printf("Press any key to return to the main menu.");
+					printf("\n%s\n", viewLine);
+					getch();
+					FirstIntroductionMenu();
+				}
+				kheshig.gold-=120;
+				kheshig.attack+=3;
+				gameSave();
 				system("cls");
-				getch();
+				cursorControlMarket();
 			}
 			else if(column==2)
 			{
+				if(kheshig.gold<120)
+				{
+					printf("\033[31mYou don't have enough gold!\033[0m");
+					printf("\n%s\n", viewLine);
+					printf("Press any key to return to the main menu.");
+					printf("\n%s\n", viewLine);
+					getch();
+					FirstIntroductionMenu();
+				}
+				kheshig.gold-=120;
+				kheshig.defense+=3;
+				gameSave();
 				system("cls");
-				getch();
+				cursorControlMarket();
 			}
 			else if(column==3)
 			{
-				system("cls");
+				printf("In process");
 				getch();
 			}
 		}
@@ -80,11 +116,6 @@ void cursorControlMarket()
 		}
         
 	}
-}
-
-void healthPotion()
-{
-
 }
 
 void PrintBoardMarket()

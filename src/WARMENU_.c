@@ -164,15 +164,9 @@ void warPanel(int currentHP, int currentEnemyHP)
 			retreat();
 			break;
         }
-		//For debug: RECURSIVE TEST
-		else if(selectedPreference == 'r')
-        {
-			system("cls");
-			warPanel(currentHP-10, currentEnemyHP);
-			break;
-        }
-	} while(selectedPreference != '1' && selectedPreference != '2' && selectedPreference != '3' && selectedPreference != '4' && selectedPreference != 'r');
+	} while(selectedPreference != '1' && selectedPreference != '2' && selectedPreference != '3' && selectedPreference != '4');
 }
+
 
 void quickAttack()
 {

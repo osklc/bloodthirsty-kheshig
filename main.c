@@ -29,8 +29,8 @@ int main()
 	hideCursor();
 	gotoxy(0,0);
 	printf("\033[31m\033[3mBLOODTHIRSTY KHESHIG\033[0m\n");
-	//Sleep(1000);
-
+	//Sleep(1000);	
+	
 	if (checkSave() == 0)
 	{
 		//printf("New game");
@@ -90,7 +90,7 @@ void hideCursor() {
 
 void FirstIntroductionMenu()
 {
-
+	kheshig.gold = 120; //for debug
 	cursorControl();
 }
 
