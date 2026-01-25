@@ -5,32 +5,30 @@
 
 #include "../include/WARMENU_.h"
 
-char boardWar[4][20] = {"Start War","War Training","",""};
+char boardWar[4][20] = {"Start War","War Training"};
+int columnSize = 2;
 
 char places[3][20] = {"Northern Forests", "Hell", "Glacial Mountains"};
 
 
 Enemy enemyPool[] = {
-    // --- NORTHERN FORESTS (Level 1 - 10) ---
-    // Low defense, medium health. Warm-up rounds.
+    // --- NORTHERN FORESTS (Level 1 - 10)
     {"Northern Forests", "Shadow-Paw Warg",     45,  12,  2,  15, 1, 1},
     {"Northern Forests", "Forest Outcast",      60,  15,  4,  25, 1, 3},
     {"Northern Forests", "Blind Ravager",       85,  22,  8,  45, 2, 6},
-    {"Northern Forests", "Moss-Skin Troll",     150, 20,  15, 80, 3, 9}, //Boss
+    {"Northern Forests", "Moss-Skin Troll",     150, 20,  15, 80, 3, 9},
 
-    // --- HELL (Level 10 - 20) ---
-    // High attack power (Glass cannon). They hit hard but their health isn't very high.
+    // --- HELL (Level 10 - 20)
     {"Hell", "Soul Burner Imp",                 100, 35,  10, 100, 2, 10},
     {"Hell", "Inferno Reaver",                  130, 42,  15, 150, 3, 13},
     {"Hell", "Cursed Soul Eater",               160, 48,  20, 200, 4, 16},
-    {"Hell", "Molten Behemoth",                 250, 55,  35, 350, 5, 19}, //Tank Boss
+    {"Hell", "Molten Behemoth",                 250, 55,  35, 350, 5, 19},
 
-    // --- GLACIAL MOUNTAINS (Level 20 - 30+) ---
-    // High defense and manpower. Battles are long and strategic.
+    // --- GLACIAL MOUNTAINS (Level 20 - 30+)
     {"Glacial Mountains", "Snow Stalker Drake", 200, 60,  25, 400, 4, 20},
     {"Glacial Mountains", "Glacier Wraith",     220, 65,  30, 500, 4, 23},
     {"Glacial Mountains", "Ice Clad Berserker", 280, 75,  40, 650, 5, 26},
-    {"Glacial Mountains", "Ice Golem",          450, 70,  60, 900, 6, 30}  //Boss
+    {"Glacial Mountains", "Ice Golem",          450, 70,  60, 900, 6, 30}
 };
 
 
@@ -39,7 +37,7 @@ void warMenu()
 	cursorControlWar();
 }
 
-void warPanel()
+void warPanel(int currentHP, int currentEnemyHP)
 {
 	char viewPlace[1][20];
 	strcpy(viewPlace[0], places[0]);
@@ -70,13 +68,13 @@ void warPanel()
 	printf("[%s]",choicedEnemiesName[0]);
 	printf("\n  ");
 
-	int kheshigActiveHP = kheshig.health;
+	int kheshigActiveHP = currentHP;
 	char kheshigHP[20];
 	snprintf(kheshigHP, 20,"HP: %d/%d", kheshigActiveHP, kheshig.health);
 
-	int enemyActiveHP = enemyPool[0].health;
+	int enemyActiveHP = currentEnemyHP;
 	char enemyHP[20];
-	snprintf(enemyHP, 20, "HP: %d/%d", enemyActiveHP, enemyPool[0].health);
+	snprintf(enemyHP, 20, "HP: %d/%d", enemyActiveHP, currentEnemyHP);
 
 	printf("%s", kheshigHP);
 
@@ -86,6 +84,45 @@ void warPanel()
 	}
 
 	printf("%s", enemyHP);
+
+	printf("\n  [");
+	int t = 0;
+	float hpRatio = (float)kheshigActiveHP / kheshig.health;
+	if (hpRatio < 0) hpRatio = 0;
+	int kheshigHealthBar = (int)(10 * hpRatio);
+	while(t<10)
+	{
+		for(int a=0;a<kheshigHealthBar;a++)
+		{
+			t++;
+			printf("|");
+		}
+		while(t<10)
+		{
+			t++;
+			printf(".");
+		}
+	}
+	printf("]");
+	printf("                 [");
+	int d = 0;
+	float enemyHpRatio = (float)enemyActiveHP / enemyPool[0].health;
+	if (enemyHpRatio < 0) enemyHpRatio = 0;
+	int enemyHealthBar = (int)(10 * enemyHpRatio);
+	while(d<10)
+	{
+		for(int a=0;a<enemyHealthBar;a++)
+		{
+			d++;
+			printf("|");
+		}
+		while(d<10)
+		{
+			d++;
+			printf(".");
+		}
+	}
+	printf("]");
 
 	printf("\n%s\n", viewLine);
 	printf("  In production(LOG)");
@@ -127,7 +164,14 @@ void warPanel()
 			retreat();
 			break;
         }
-	} while(selectedPreference != '1' && selectedPreference != '2' && selectedPreference != '3' && selectedPreference != '4');
+		//For debug: RECURSIVE TEST
+		else if(selectedPreference == 'r')
+        {
+			system("cls");
+			warPanel(currentHP-10, currentEnemyHP);
+			break;
+        }
+	} while(selectedPreference != '1' && selectedPreference != '2' && selectedPreference != '3' && selectedPreference != '4' && selectedPreference != 'r');
 }
 
 void quickAttack()
@@ -156,7 +200,7 @@ void cursorControlWar()
 	{
 		system("cls");
 		printf("%s\n", viewLine);
-		printf("\033[94m\033[3m                       WAR MENU\033[0m");
+		printf("\033[35m\033[3m                       WAR MENU\033[0m");
 		printf("\n%s\n", viewLine);
 		printf("\033[91mHealth:\033[0m %d\n",kheshig.health);
 		printf("\033[36m\033[1mLevel:\033[0m %d\n",kheshig.level);
@@ -173,34 +217,25 @@ void cursorControlWar()
         if(selectedDirection == 'A' || selectedDirection == 'a' || selectedDirection == 75)
         {
             column--;
-            if(column < 0) column = 3;
+            if(column < 0) column = columnSize-1;
         }
         else if(selectedDirection == 'D' || selectedDirection == 'd' || selectedDirection == 77)
         {
             column++;
-            if(column > 3) column = 0;
+            if(column > columnSize-1) column = 0;
         }
         else if(selectedDirection == 'F' || selectedDirection == 'f')
         {
         	if(column==0)
         	{
         		system("cls");
-				warPanel();
+				warPanel(kheshig.health, enemyPool[0].health);
 			}
 			else if(column==1)
 			{
 				system("cls");
-
-			}
-			else if(column==2)
-			{
-				system("cls");
-
-			}
-			else if(column==3)
-			{
-				system("cls");
-
+				printf("Training mode coming soon...");
+				getch();
 			}
 		}
 		else if(selectedDirection == 'Q' || selectedDirection == 'q')
@@ -220,7 +255,6 @@ void cursorControlWar()
 void PrintBoardWar()
 {
 	int i,j,m,n;
-	int columnSize = 4;
 	
 	for(i=0;i<1;i++)
 	{

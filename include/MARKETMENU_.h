@@ -17,6 +17,9 @@ extern int column;
 extern void FirstIntroductionMenu();
 extern void gameSave();
 
+
+void healthPotion();
+
 void marketMenu();
 void cursorControlMarket();
 void PrintBoardMarket();

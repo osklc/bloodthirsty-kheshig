@@ -29,7 +29,7 @@ extern void FirstIntroductionMenu();
 extern void gameSave();
 
 void warMenu();
-void warPanel();
+void warPanel(int currentHP, int currentEnemyHP);
 void cursorControlWar();
 void PrintBoardWar();
 

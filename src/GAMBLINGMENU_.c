@@ -50,17 +50,17 @@ void cursorControlGambling()
         	if(column==0)
         	{
         		system("cls");
-
+				getch();
 			}
 			else if(column==1)
 			{
 				system("cls");
-
+				getch();
 			}
 			else if(column==2)
 			{
 				system("cls");
-
+				getch();
 			}
 		}
 		else if(selectedDirection == 'Q' || selectedDirection == 'q')

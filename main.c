@@ -155,8 +155,8 @@ void cursorControl()
 		}
 		else if(selectedDirection == 'Q' || selectedDirection == 'q')
         {
-        	printf("\nProgram is closed.");
-        	Sleep(200);
+        	//printf("\nProgram is closed.");
+        	//Sleep(200);
         	break;
 		}
 		else

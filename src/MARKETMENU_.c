@@ -50,22 +50,22 @@ void cursorControlMarket()
         	if(column==0)
         	{
         		system("cls");
-
+				healthPotion();
 			}
 			else if(column==1)
 			{
 				system("cls");
-
+				getch();
 			}
 			else if(column==2)
 			{
 				system("cls");
-
+				getch();
 			}
 			else if(column==3)
 			{
 				system("cls");
-
+				getch();
 			}
 		}
 		else if(selectedDirection == 'Q' || selectedDirection == 'q')
@@ -80,6 +80,11 @@ void cursorControlMarket()
 		}
         
 	}
+}
+
+void healthPotion()
+{
+
 }
 
 void PrintBoardMarket()
