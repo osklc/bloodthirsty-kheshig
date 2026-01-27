@@ -12,7 +12,6 @@ A turn-based arena combat game written in C, running in the Windows console term
 - [Building](#-building)
 - [How to Play](#-how-to-play)
 - [Game Zones](#️-game-zones)
-- [Character Stats](#-character-stats)
 - [Development Status](#-development-status)
 - [Roadmap](#-roadmap)
 - [Technical Details](#️-technical-details)
@@ -148,15 +147,6 @@ Test your luck with gambling games to increase or lose gold.
 
 ---
 
-## 📊 Character Stats
-
-| Stat | Description | Initial Value |
-|------|-------------|---|
-| **Health** | Character's hitpoints | 100 |
-| **Durability** | Equipment durability/integrity | 100 |
-| **Gold** | Currency for trading and upgrades | 0 |
----
-
 ## 🚀 Development Status
 
 ### Current Version: v0.1.0-alpha
@@ -229,6 +219,7 @@ Turn-Based Arena Fighter/
 - `stdlib.h` - Standard library
 - `conio.h` - Console I/O
 - `windows.h` - Windows API (cursor control, console management)
+- `time.h` - Time functions (RNG seeding, timing, simple delays)
 
 ### ANSI Escape Codes
 The game uses ANSI escape codes for colored terminal output:
@@ -243,10 +234,8 @@ The game uses ANSI escape codes for colored terminal output:
 
 ## 🐛 Known Issues
 
-- Character stats not saved between sessions
 - Menu systems are UI prototypes (not fully functional)
 - Limited visual feedback in combat zones
-- No save/load functionality
 - Combat balance not finalized
 
 ---

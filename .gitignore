@@ -1,5 +1,6 @@
 *.win
 *.dev
+*.dat
 *.layout
 *.txt
 *.idea
@@ -7,4 +8,3 @@
 *.png
 *.jpg
 *.jpeg
-*.dat
