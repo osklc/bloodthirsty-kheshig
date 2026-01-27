@@ -3,14 +3,19 @@
 #include <conio.h>
 #include <windows.h>
 #include <time.h>
+#include <string.h>
+
+#define WAR_LINE_SIZE 1024
+#define MAX_VISIBLE_LOGS 5
 
 #include "../include/WARMENU_.h"
 
 char boardWar[4][20] = {"Start War","War Training"};
 int columnSize = 2;
-
 char places[3][20] = {"Northern Forests", "Hell", "Glacial Mountains"};
 
+char warLogs[MAX_VISIBLE_LOGS][WAR_LINE_SIZE];
+int currentLogCount = 0;
 
 Enemy enemyPool[] = {
     // --- NORTHERN FORESTS (Level 1 - 10)
@@ -38,14 +43,39 @@ void warMenu()
 	cursorControlWar();
 }
 
+void clearWarLog() 
+{
+    for(int t=0; t<MAX_VISIBLE_LOGS;t++)
+	{
+		warLogs[t][0] = '\0';
+	}
+    currentLogCount = 0;
+}
+
+void appendWarLog(const char *line) {
+    if (currentLogCount < MAX_VISIBLE_LOGS) {
+        snprintf(warLogs[currentLogCount], WAR_LINE_SIZE, "  %s", line);
+        currentLogCount++;
+    } else {
+        for (int i = 0; i < MAX_VISIBLE_LOGS - 1; i++) {
+            strcpy(warLogs[i], warLogs[i + 1]);
+        }
+        snprintf(warLogs[MAX_VISIBLE_LOGS - 1], WAR_LINE_SIZE, "  %s", line);
+    }
+}
+
+void makeAttackLog(char *out, size_t size,const char *attacker,const char *target,int damage)
+{
+    snprintf(out, size,"  %s attacks %s for %d damage\n",attacker, target, damage);
+}
+
+
 void warPanel(int currentHP, int currentEnemyHP)
 {
 	system("cls");
-	char viewPlace[20];
-	strcpy(viewPlace, enemyPool[0].place);
 	char viewLine[] = "========================================================";
-	char viewHeader[100];
-	sprintf(viewHeader, "     \033[31mBLOODTHIRSTY KHESHIG\033[0m - \033[32m%s\033[0m", viewPlace);
+	char viewHeader[120];
+	snprintf(viewHeader, sizeof(viewHeader), "     \033[31mBLOODTHIRSTY KHESHIG\033[0m - \033[32m%s\033[0m", enemyPool[0].place);
 
 	int viewDiff = strlen(viewLine) - strlen(viewHeader);
 
@@ -125,11 +155,19 @@ void warPanel(int currentHP, int currentEnemyHP)
 	printf("]");
 
 	printf("\n%s\n", viewLine);
-	printf("  In production(LOG)");
-	printf("\n%s\n", viewLine);
+	printf("                   --- BATTLE LOG ---\n");
+	for(int i=0;i<currentLogCount;i++)
+	{
+		printf("%s", warLogs[i]);
+	}
+	for(int i=currentLogCount;i<MAX_VISIBLE_LOGS;i++)
+	{
+		printf("\n");
+	}
+	printf("%s\n", viewLine);
 
 	printf("  1. Quick Attack  | 2. Normal Attack | 3. Heavy Attack\n");
-	printf("  4. Defense       | 5. Escape Battle - Lose Gold\n");
+	printf("  4. Defense       | 5. Escape - Lose Gold\n");
 	printf("%s\n", viewLine);
 
 	char choice;
@@ -151,7 +189,6 @@ void checkBattleStatus(int pHP, int eHP)
 		printf("+%d Gold\n", enemyPool[0].goldReward);
 		kheshig.gold += enemyPool[0].goldReward;
 		gameSave();
-		Sleep(1500);
 		FirstIntroductionMenu();
 	}
 	else if(pHP <= 0)
@@ -161,7 +198,6 @@ void checkBattleStatus(int pHP, int eHP)
 		printf("-%d Gold\n", loss);
 		kheshig.gold -= loss;
 		gameSave();
-		Sleep(1500);
 		FirstIntroductionMenu();
 	}
 	else
@@ -170,8 +206,9 @@ void checkBattleStatus(int pHP, int eHP)
         int enemyDmg = (chanceFactor*(enemyPool[0].attack - kheshig.defense))/10;
         if(enemyDmg < 1) enemyDmg = 1;
         
-        printf("\nEnemy attacks! Received %d damage.\n", enemyDmg);
-        Sleep(800);
+		char line[128];
+		makeAttackLog(line, sizeof(line), enemyPool[0].name, "Kheshig", enemyDmg);
+		appendWarLog(line);
 		warPanel(pHP - enemyDmg, eHP);
 	}
 }
@@ -183,14 +220,14 @@ void quickAttack(int pHP, int eHP)
 	{
 		int dmg = kheshig.attack - enemyPool[0].defense;
         if(dmg < 1) dmg = 1;
-		printf("\nQuick Attack hit: %d damage!\n", dmg);
-		Sleep(1000);
+		char line[128];
+		makeAttackLog(line, sizeof(line), "Kheshig", enemyPool[0].name, dmg);
+		appendWarLog(line);
 		checkBattleStatus(pHP, eHP - dmg);
 	}
 	else
 	{
-		printf("\nYou Missed!\n");
-		Sleep(1000);
+		appendWarLog("  Kheshig missed their Quick Attack!\n");
 		checkBattleStatus(pHP, eHP);
 	}
 }
@@ -202,14 +239,14 @@ void normalAttack(int pHP, int eHP)
 	{
 		int dmg = (int)(1.2 * (kheshig.attack - enemyPool[0].defense));
         if(dmg < 1) dmg = 1;
-		printf("\nNormal Attack hit: %d damage!\n", dmg);
-		Sleep(1000);
+		char line[128];
+		makeAttackLog(line, sizeof(line), "Kheshig", enemyPool[0].name, dmg);
+		appendWarLog(line);
 		checkBattleStatus(pHP, eHP - dmg);
 	}
 	else
 	{
-		printf("\nYou Missed!\n");
-		Sleep(1000);
+		appendWarLog("  Kheshig missed their Normal Attack!\n");
 		checkBattleStatus(pHP, eHP);
 	}
 }
@@ -221,14 +258,14 @@ void heavyAttack(int pHP, int eHP)
 	{
 		int dmg = 2 * (kheshig.attack - enemyPool[0].defense);
         if(dmg < 1) dmg = 1;
-		printf("\nHeavy Strike hit: %d damage!\n", dmg);
-		Sleep(1000);
+		char line[128];
+		makeAttackLog(line, sizeof(line), "Kheshig", enemyPool[0].name, dmg);
+		appendWarLog(line);
 		checkBattleStatus(pHP, eHP - dmg);
 	}
 	else
 	{
-		printf("\nYou Missed!\n");
-		Sleep(1000);
+		appendWarLog("  Kheshig missed their Heavy Attack!\n");
 		checkBattleStatus(pHP, eHP);
 	}
 }
@@ -288,7 +325,6 @@ void cursorControlWar()
 		else
 		{
 			//printf("\n\033[3m\033[31mERROR:\033[0m %c is not a valid value. Please enter valid input!", selectedDirection);
-			//Sleep(1000);
 		}
         
 	}

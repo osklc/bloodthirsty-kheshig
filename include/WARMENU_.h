@@ -3,6 +3,7 @@
 #include <conio.h>
 #include <windows.h>
 #include <time.h>
+#include <string.h>
 
 typedef struct Player{
     int health;
@@ -33,6 +34,11 @@ void warMenu();
 void warPanel(int currentHP, int currentEnemyHP);
 void cursorControlWar();
 void PrintBoardWar();
+
+void clearWarLog();
+void makeAttackLog(char *out, size_t size,const char *attacker,const char *target,int damage);
+void appendWarLog(const char *line);
+
 void checkBattleStatus(int pHP, int eHP);
 void quickAttack(int pHP, int eHP);
 void normalAttack(int pHP, int eHP);

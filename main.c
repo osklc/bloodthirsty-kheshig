@@ -3,6 +3,8 @@
 #include <conio.h>
 #include <windows.h>
 #include <time.h>
+#include <string.h>
+
 #include "include/WARMENU_.h"
 #include "include/MARKETMENU_.h"
 #include "include/GAMBLINGMENU_.h"

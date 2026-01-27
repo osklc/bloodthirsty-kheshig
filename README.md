@@ -220,6 +220,7 @@ Turn-Based Arena Fighter/
 - `conio.h` - Console I/O
 - `windows.h` - Windows API (cursor control, console management)
 - `time.h` - Time functions (RNG seeding, timing, simple delays)
+- `string.h` - String handling and memory operations
 
 ### ANSI Escape Codes
 The game uses ANSI escape codes for colored terminal output:
