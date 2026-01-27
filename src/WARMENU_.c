@@ -37,6 +37,25 @@ Enemy enemyPool[] = {
     {"Glacial Mountains", "Ice Golem",          450, 70,  60, 900, 6, 30}
 };
 
+const char* retreatTexts[] = {
+    "You chose survival over honor.",
+    "Fear sharpened your senses, and you fled.",
+    "You vanished before the final blow could land."
+};
+
+const char* defeatTexts[] = {
+    "Your strength failed you in the end.",
+    "The world went dark as you fell.",
+    "Steel and fate claimed you together."
+};
+
+const char* victoryTexts[] = {
+    "Your blade found its mark.",
+    "The enemy fell before your resolve.",
+    "You stand victorious amidst the carnage.",
+	"The battlefield is stained with the blood of the enemy."
+};
+
 
 void warMenu()
 {
@@ -177,8 +196,36 @@ void warPanel(int currentHP, int currentEnemyHP)
 		else if(choice == '2') normalAttack(currentHP, currentEnemyHP);
 		else if(choice == '3') heavyAttack(currentHP, currentEnemyHP);
 		else if(choice == '4') { /* in process */ }
-		else if(choice == '5') { /* in process */ }
+		else if(choice == '5') { escapeWar(); }
 	} while(choice < '1' || choice > '5');
+}
+
+void escapeWar()
+{
+	char viewLineEscape[] = "======================================================================";
+	system("cls");
+		int loss = (kheshig.gold * 15) / 100;
+        printf("%s\n", viewLineEscape);
+		printf("                      \033[33m\033[1m<<< KHESHIG RETREATED >>>\033[0m\n");
+        printf("%s\n", viewLineEscape);
+
+		int retreatCount = sizeof(retreatTexts) / sizeof(retreatTexts[0]);
+        int idx = rand() % retreatCount;
+        printf("\n    %s\n",retreatTexts[idx]);
+        printf("    The %s remains behind as you flee into the shadows...\n", enemyPool[0].name);
+        
+        printf("\n    \033[33m[CONSEQUENCES]\033[0m\n");
+		printf("    - %d Gold Coins (Lost while escaping in haste)\n", loss);
+        
+		kheshig.gold -= loss;
+		gameSave();
+
+		printf("\n%s\n", viewLineEscape);
+		printf("    Press any key to recover at the camp...");
+		printf("\n%s\n", viewLineEscape);
+		getch();
+		clearWarLog();
+		FirstIntroductionMenu();
 }
 
 void checkBattleStatus(int pHP, int eHP)
@@ -192,7 +239,9 @@ void checkBattleStatus(int pHP, int eHP)
         printf("%s\n", viewLineBattle);
         
         printf("\n    Kheshig has defeated the %s!\n", enemyPool[0].name);
-        printf("    The battlefield is stained with the blood of the enemy.\n");
+		int victoryCount = sizeof(victoryTexts) / sizeof(victoryTexts[0]);
+        int idx = rand() % victoryCount;
+        printf("    %s\n",victoryTexts[idx]);
         
         printf("\n    \033[33m[LOOT COLLECTED]\033[0m\n");
 		printf("    + %d Gold Coins\n", enemyPool[0].goldReward);
@@ -201,7 +250,7 @@ void checkBattleStatus(int pHP, int eHP)
 		gameSave();
 
 		printf("\n%s\n", viewLineBattle);
-		printf("      Press any key to return to the camp...");
+		printf("    Press any key to return to the camp...");
 		printf("\n%s\n", viewLineBattle);
 		getch();
 		clearWarLog();
@@ -216,7 +265,15 @@ void checkBattleStatus(int pHP, int eHP)
         printf("%s\n", viewLineBattle);
         
         printf("\n    You were bested by the %s.\n", enemyPool[0].name);
-        printf("    Death is a cold companion in the %s...\n", enemyPool[0].place);
+        
+		if(strcmp(enemyPool[0].place, "Northern Forests") == 0)
+		{
+			printf("    Death is a cold companion in the %s...\n", enemyPool[0].place);
+		}
+
+		int defeatCount = sizeof(defeatTexts) / sizeof(defeatTexts[0]);
+        int idx = rand() % defeatCount;
+        printf("    %s\n",defeatTexts[idx]);
         
         printf("\n    \033[31m[PENALTIES]\033[0m\n");
 		printf("    - %d Gold Coins (Scavengers took their share)\n", loss);
@@ -225,7 +282,7 @@ void checkBattleStatus(int pHP, int eHP)
 		gameSave();
 
 		printf("\n%s\n", viewLineBattle);
-		printf("      Press any key to recover at the camp...");
+		printf("    Press any key to recover at the camp...");
 		printf("\n%s\n", viewLineBattle);
 		getch();
 		clearWarLog();

@@ -34,6 +34,7 @@ void warMenu();
 void warPanel(int currentHP, int currentEnemyHP);
 void cursorControlWar();
 void PrintBoardWar();
+void escapeWar();
 
 void clearWarLog();
 void makeAttackLog(char *out, size_t size,const char *attacker,const char *target,int damage);
