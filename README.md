@@ -268,4 +268,4 @@ Created: January 2026
 ---
 
 **Last Updated**: January 28, 2026  
-**Current Version**: v0.1.0-alpha (Non-Production Ready)
+**Current Version**: v0.2.0 (Pre-Alpha) (Non-Production Ready)
