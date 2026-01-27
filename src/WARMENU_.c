@@ -39,21 +39,46 @@ Enemy enemyPool[] = {
 
 const char* retreatTexts[] = {
     "You chose survival over honor.",
-    "Fear sharpened your senses, and you fled.",
-    "You vanished before the final blow could land."
-};
-
-const char* defeatTexts[] = {
-    "Your strength failed you in the end.",
-    "The world went dark as you fell.",
-    "Steel and fate claimed you together."
+	"The shadows were kinder to you than your own steel today.",
+	"The Eternal Sky frowns upon your retreat, but your breath remains.",
+	"You fled like a wounded dog—alive, but broken.",
+	"Coward's breath is sweeter than a warrior's death, is it not?",
+	"Your ancestors spit at the mention of your name tonight.",
+	"The crows will mock your retreat in their cawing.",
+	"You chose the path of shame over the warrior's end.",
+	"Your legs carried you faster than your courage could.",
+	"The steppe remembers those who run—and judges them.",
+	"Survival tastes of ash when honor is the price."
 };
 
 const char* victoryTexts[] = {
-    "Your blade found its mark.",
-    "The enemy fell before your resolve.",
-    "You stand victorious amidst the carnage.",
-	"The battlefield is stained with the blood of the enemy."
+    "The Eternal Blue Sky witnesses your glorious triumph!",
+	"A new saga begins with the screams of your fallen foe.",
+	"The spirits of the steppe howl in favor of your sharp steel.",
+	"Victory belongs to the swift; the battlefield is yours!",
+	"You stand victorious amidst the carnage.",
+	"Another soul rides to the ancestors on your steel.",
+	"The ravens gather; your enemy feeds them well.",
+	"Swift as the wolf, fierce as the eagle—victory is yours!",
+	"Your foe's courage broke before your blade did.",
+	"The steppe remembers this kill.",
+	"Blood and glory—the old way prevails!",
+	"Your enemy's final breath joins the wind."
+};
+
+const char* defeatTexts[] = {
+    "The dust of the steppe shall swallow your forgotten name.",
+    "Fate is a cruel mistress, and today she chose your end.",
+    "Your soul wanders into the cold mists of the afterlife.",
+    "The crows gather for a feast you did not intend to provide.",
+	"The steppe claims another forgotten warrior.",
+	"Your ancestors turn their backs in silence.",
+	"The Eternal Sky saw your last breath—and turned away.",
+	"You rode into legend, but death rode faster.",
+	"The wolves will scatter your bones by morning.",
+	"Your story ends here, unsung and unremembered.",
+	"Even the bravest fall when fate swings her blade.",
+	"The spirits did not hear your final prayer."
 };
 
 
