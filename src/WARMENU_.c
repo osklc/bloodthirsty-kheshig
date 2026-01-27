@@ -18,23 +18,24 @@ char warLogs[MAX_VISIBLE_LOGS][WAR_LINE_SIZE];
 int currentLogCount = 0;
 
 Enemy enemyPool[] = {
+	//IS NOT BALANCED IN PROCESS (numbers are representation)
     // --- NORTHERN FORESTS (Level 1 - 10)
-    {"Northern Forests", "Shadow-Paw Warg",     45,  12,  2,  15, 1, 1},
-    {"Northern Forests", "Forest Outcast",      60,  15,  4,  25, 1, 3},
-    {"Northern Forests", "Blind Ravager",       85,  22,  8,  45, 2, 6},
-    {"Northern Forests", "Moss-Skin Troll",     150, 20,  15, 80, 3, 9},
+    {"Northern Forests", "Shadow-Paw Warg",     45,  12,  2,  15, 1, 0, 50},
+    {"Northern Forests", "Forest Outcast",      60,  15,  4,  25, 1, 3, 12},
+    {"Northern Forests", "Blind Ravager",       85,  22,  8,  45, 2, 6, 15},
+    {"Northern Forests", "Moss-Skin Troll",     150, 20,  15, 80, 3, 9, 20},
 
     // --- HELL (Level 10 - 20)
-    {"Hell", "Soul Burner Imp",                 100, 35,  10, 100, 2, 10},
-    {"Hell", "Inferno Reaver",                  130, 42,  15, 150, 3, 13},
-    {"Hell", "Cursed Soul Eater",               160, 48,  20, 200, 4, 16},
-    {"Hell", "Molten Behemoth",                 250, 55,  35, 350, 5, 19},
+    {"Hell", "Soul Burner Imp",                 100, 35,  10, 100, 2, 10, 20},
+    {"Hell", "Inferno Reaver",                  130, 42,  15, 150, 3, 13, 22},
+    {"Hell", "Cursed Soul Eater",               160, 48,  20, 200, 4, 16, 25},
+    {"Hell", "Molten Behemoth",                 250, 55,  35, 350, 5, 19, 28},
 
     // --- GLACIAL MOUNTAINS (Level 20 - 30+)
-    {"Glacial Mountains", "Snow Stalker Drake", 200, 60,  25, 400, 4, 20},
-    {"Glacial Mountains", "Glacier Wraith",     220, 65,  30, 500, 4, 23},
-    {"Glacial Mountains", "Ice Clad Berserker", 280, 75,  40, 650, 5, 26},
-    {"Glacial Mountains", "Ice Golem",          450, 70,  60, 900, 6, 30}
+    {"Glacial Mountains", "Snow Stalker Drake", 200, 60,  25, 400, 4, 20, 30},
+    {"Glacial Mountains", "Glacier Wraith",     220, 65,  30, 500, 4, 23, 33},
+    {"Glacial Mountains", "Ice Clad Berserker", 280, 75,  40, 650, 5, 26, 38},
+    {"Glacial Mountains", "Ice Golem",          450, 70,  60, 900, 6, 30, 42}
 };
 
 const char* retreatTexts[] = {
@@ -271,8 +272,11 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx)
         
         printf("\n    \033[33m[LOOT COLLECTED]\033[0m\n");
 		printf("    + %d Gold Coins\n", enemyPool[enemyIdx].goldReward);
+		printf("    + %d Xp Earned\n", enemyPool[enemyIdx].xpReward);
         
 		kheshig.gold += enemyPool[enemyIdx].goldReward;
+		kheshig.xp += enemyPool[enemyIdx].xpReward;
+		xpLevelCalc();
 		gameSave();
 
 		printf("\n%s\n", viewLineBattle);
@@ -400,7 +404,7 @@ int getRandomEnemyIndex(int playerLevel)
 
 	for (int i = 0; i < sizeof(enemyPool) / sizeof(Enemy); i++)
 	{
-		if(kheshig.level >= enemyPool[i].minLevel)
+		if(playerLevel >= enemyPool[i].minLevel)
 		{
 			validIndices[validCount] = i;
 			validCount++;

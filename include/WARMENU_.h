@@ -24,12 +24,14 @@ typedef struct Enemy{
     int goldReward;
     int difficulty;
     int minLevel;
+    int xpReward;
 }Enemy;
 
 extern int row;
 extern int column;
 extern void FirstIntroductionMenu();
 extern void gameSave();
+extern void xpLevelCalc();
 
 void warMenu();
 void warPanel(int currentHP, int currentEnemyHP, int enemyIdx);

@@ -26,6 +26,7 @@ void PrintBoard();
 void cursorControl();
 int checkSave();
 void gameSave();
+void xpLevelCalc();
 
 int main() 
 {
@@ -76,6 +77,134 @@ void gameSave()
 		//Sleep(1000);
         //printf("ERROR: Save file cant open!\n");
     }
+}
+
+void xpLevelCalc()
+{
+	if(kheshig.xp < 100)
+	{
+		kheshig.level = 0;
+	}
+	else if(kheshig.xp < 200)
+	{
+		kheshig.level = 1;
+	}
+	else if(kheshig.xp < 350)
+	{
+		kheshig.level = 2;
+	}
+	else if(kheshig.xp < 550)
+	{
+		kheshig.level = 3;
+	}
+	else if(kheshig.xp < 800)
+	{
+		kheshig.level = 4;
+	}
+	else if(kheshig.xp < 1100)
+	{
+		kheshig.level = 5;
+	}
+	else if(kheshig.xp < 1450)
+	{
+		kheshig.level = 6;
+	}
+	else if(kheshig.xp < 1850)
+	{
+		kheshig.level = 7;
+	}
+	else if(kheshig.xp < 2300)
+	{
+		kheshig.level = 8;
+	}
+	else if(kheshig.xp < 2800)
+	{
+		kheshig.level = 9;
+	}
+	else if(kheshig.xp < 3350)
+	{
+		kheshig.level = 10;
+	}
+	else if(kheshig.xp < 3950)
+	{
+		kheshig.level = 11;
+	}
+	else if(kheshig.xp < 4600)
+	{
+		kheshig.level = 12;
+	}
+	else if(kheshig.xp < 5300)
+	{
+		kheshig.level = 13;
+	}
+	else if(kheshig.xp < 6050)
+	{
+		kheshig.level = 14;
+	}
+	else if(kheshig.xp < 6850)
+	{
+		kheshig.level = 15;
+	}
+	else if(kheshig.xp < 7700)
+	{
+		kheshig.level = 16;
+	}
+	else if(kheshig.xp < 8600)
+	{
+		kheshig.level = 17;
+	}
+	else if(kheshig.xp < 9550)
+	{
+		kheshig.level = 18;
+	}
+	else if(kheshig.xp < 10550)
+	{
+		kheshig.level = 19;
+	}
+	else if(kheshig.xp < 11600)
+	{
+		kheshig.level = 20;
+	}
+	else if(kheshig.xp < 12700)
+	{
+		kheshig.level = 21;
+	}
+	else if(kheshig.xp < 13850)
+	{
+		kheshig.level = 22;
+	}
+	else if(kheshig.xp < 15050)
+	{
+		kheshig.level = 23;
+	}
+	else if(kheshig.xp < 16300)
+	{
+		kheshig.level = 24;
+	}
+	else if(kheshig.xp < 17600)
+	{
+		kheshig.level = 25;
+	}
+	else if(kheshig.xp < 18950)
+	{
+		kheshig.level = 26;
+	}
+	else if(kheshig.xp < 20350)
+	{
+		kheshig.level = 27;
+	}
+	else if(kheshig.xp < 21800)
+	{
+		kheshig.level = 28;
+	}
+	else if(kheshig.xp < 23300)
+	{
+		kheshig.level = 29;
+	}
+	else
+	{
+		kheshig.level = 30;
+	}
 }
 
 void gotoxy(int x, int y) {
