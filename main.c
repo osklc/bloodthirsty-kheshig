@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <windows.h>
+#include <time.h>
 #include "include/WARMENU_.h"
 #include "include/MARKETMENU_.h"
 #include "include/GAMBLINGMENU_.h"
@@ -26,6 +27,7 @@ void gameSave();
 
 int main() 
 {
+	srand(time(NULL));
 	hideCursor();
 	gotoxy(0,0);
 	printf("\033[31m\033[3mBLOODTHIRSTY KHESHIG\033[0m\n");
@@ -35,8 +37,8 @@ int main()
 	{
 		//printf("New game");
 
-		kheshig.attack=1;
-		kheshig.defense=1;
+		kheshig.attack=10;
+		kheshig.defense=10;
 		kheshig.gold=0;
 		kheshig.level=0;
 		kheshig.health=100;
@@ -90,7 +92,7 @@ void hideCursor() {
 
 void FirstIntroductionMenu()
 {
-	kheshig.gold = 120; //for debug
+	system("cls");
 	cursorControl();
 }
 

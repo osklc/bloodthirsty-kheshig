@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <windows.h>
+#include <time.h>
 
 #include "../include/WARMENU_.h"
 
@@ -39,11 +40,12 @@ void warMenu()
 
 void warPanel(int currentHP, int currentEnemyHP)
 {
-	char viewPlace[1][20];
-	strcpy(viewPlace[0], places[0]);
-	char viewLine[] = "==================================================";
+	system("cls");
+	char viewPlace[20];
+	strcpy(viewPlace, enemyPool[0].place);
+	char viewLine[] = "========================================================";
 	char viewHeader[100];
-	sprintf(viewHeader, "     \033[31mBLOODTHIRSTY KHESHIG\033[0m - \033[32m%s\033[0m", viewPlace[0]);
+	sprintf(viewHeader, "     \033[31mBLOODTHIRSTY KHESHIG\033[0m - \033[32m%s\033[0m", viewPlace);
 
 	int viewDiff = strlen(viewLine) - strlen(viewHeader);
 
@@ -55,39 +57,36 @@ void warPanel(int currentHP, int currentEnemyHP)
 	printf("%s", viewHeader);
 	printf("\n%s\n", viewLine);
 	
-	char choicedEnemiesName[1][20];
-	strcpy(choicedEnemiesName[0], enemyPool[0].name);
+	char choicedEnemiesName[30];
+	strcpy(choicedEnemiesName, enemyPool[0].name);
 
 	
 	printf("  ");
-	printf("[KHESHIG]");
-	for(int j=0;j<35-strlen(choicedEnemiesName[0]);j++)
+	printf("[Kheshig]");
+	for(int j=0;j<35-strlen(choicedEnemiesName);j++)
 	{
 		printf(" ");
 	}
-	printf("[%s]",choicedEnemiesName[0]);
-	printf("\n  ");
+	printf("[%s]\n",choicedEnemiesName);
 
-	int kheshigActiveHP = currentHP;
-	char kheshigHP[20];
-	snprintf(kheshigHP, 20,"HP: %d/%d", kheshigActiveHP, kheshig.health);
+	char kheshigHPStr[25];
+	snprintf(kheshigHPStr, 25, "  HP: %d/%d", currentHP, kheshig.health);
 
-	int enemyActiveHP = currentEnemyHP;
-	char enemyHP[20];
-	snprintf(enemyHP, 20, "HP: %d/%d", enemyActiveHP, currentEnemyHP);
+	char enemyHPStr[25];
+	snprintf(enemyHPStr, 25, "  HP: %d/%d", currentEnemyHP, enemyPool[0].health);
 
-	printf("%s", kheshigHP);
+	printf("%s", kheshigHPStr);
 
-	for(int j=0;j<44-strlen(choicedEnemiesName[0])-strlen(kheshigHP);j++)
+	for(int j=0;j<44-strlen(choicedEnemiesName)-strlen(kheshigHPStr);j++)
 	{
 		printf(" ");
 	}
 
-	printf("%s", enemyHP);
+	printf("%s", enemyHPStr);
 
 	printf("\n  [");
 	int t = 0;
-	float hpRatio = (float)kheshigActiveHP / kheshig.health;
+	float hpRatio = (float)currentHP / kheshig.health;
 	if (hpRatio < 0) hpRatio = 0;
 	int kheshigHealthBar = (int)(10 * hpRatio);
 	while(t<10)
@@ -105,8 +104,9 @@ void warPanel(int currentHP, int currentEnemyHP)
 	}
 	printf("]");
 	printf("                 [");
+
 	int d = 0;
-	float enemyHpRatio = (float)enemyActiveHP / enemyPool[0].health;
+	float enemyHpRatio = (float)currentEnemyHP / enemyPool[0].health;
 	if (enemyHpRatio < 0) enemyHpRatio = 0;
 	int enemyHealthBar = (int)(10 * enemyHpRatio);
 	while(d<10)
@@ -128,62 +128,111 @@ void warPanel(int currentHP, int currentEnemyHP)
 	printf("  In production(LOG)");
 	printf("\n%s\n", viewLine);
 
-	printf("  1. Quick Attack (90%% Accuracy - Low Damage)\n");
-	printf("  2. Heavy Strike (50%% Accuracy - High Damage)\n");
-	printf("  3. Defense (50%% Damage Reduction)\n");
-	printf("  4. Retreat (Escape Battle - Lose Gold)\n");
-
+	printf("  1. Quick Attack  | 2. Normal Attack | 3. Heavy Attack\n");
+	printf("  4. Defense       | 5. Escape Battle - Lose Gold\n");
 	printf("%s\n", viewLine);
 
-	char selectedPreference;
+	char choice;
+	do {
+		choice = getch();
+		if(choice == '1') quickAttack(currentHP, currentEnemyHP);
+		else if(choice == '2') normalAttack(currentHP, currentEnemyHP);
+		else if(choice == '3') heavyAttack(currentHP, currentEnemyHP);
+		else if(choice == '4') { /* in process */ }
+		else if(choice == '5') { /* in process */ }
+	} while(choice < '1' || choice > '5');
+}
 
-	do
+void checkBattleStatus(int pHP, int eHP)
+{
+	if(eHP <= 0)
 	{
-		selectedPreference = getch();
-		if(selectedPreference == '1')
-        {
-			system("cls");
-			quickAttack();
-			break;
-        }
-		else if(selectedPreference == '2')
-        {
-			system("cls");
-			heavyStrike();
-			break;
-        }
-		else if(selectedPreference == '3')
-        {
-			system("cls");
-			defense();
-			break;
-        }
-		else if(selectedPreference == '4')
-        {
-			system("cls");
-			retreat();
-			break;
-        }
-	} while(selectedPreference != '1' && selectedPreference != '2' && selectedPreference != '3' && selectedPreference != '4');
+		printf("\n\033[32mKheshig Win!\033[0m\n");
+		printf("+%d Gold\n", enemyPool[0].goldReward);
+		kheshig.gold += enemyPool[0].goldReward;
+		gameSave();
+		Sleep(1500);
+		FirstIntroductionMenu();
+	}
+	else if(pHP <= 0)
+	{
+		int loss = (kheshig.gold * 25) / 100;
+		printf("\n\033[31mKheshig Defeated...\033[0m\n");
+		printf("-%d Gold\n", loss);
+		kheshig.gold -= loss;
+		gameSave();
+		Sleep(1500);
+		FirstIntroductionMenu();
+	}
+	else
+	{
+		int chanceFactor = 10 + rand() % 10;
+        int enemyDmg = (chanceFactor*(enemyPool[0].attack - kheshig.defense))/10;
+        if(enemyDmg < 1) enemyDmg = 1;
+        
+        printf("\nEnemy attacks! Received %d damage.\n", enemyDmg);
+        Sleep(800);
+		warPanel(pHP - enemyDmg, eHP);
+	}
 }
 
+void quickAttack(int pHP, int eHP)
+{
+	int chance = rand() % 100;
+	if(chance < 90)
+	{
+		int dmg = kheshig.attack - enemyPool[0].defense;
+        if(dmg < 1) dmg = 1;
+		printf("\nQuick Attack hit: %d damage!\n", dmg);
+		Sleep(1000);
+		checkBattleStatus(pHP, eHP - dmg);
+	}
+	else
+	{
+		printf("\nYou Missed!\n");
+		Sleep(1000);
+		checkBattleStatus(pHP, eHP);
+	}
+}
 
-void quickAttack()
+void normalAttack(int pHP, int eHP)
 {
-	getch();
+	int chance = rand() % 100;
+	if(chance < 75)
+	{
+		int dmg = (int)(1.2 * (kheshig.attack - enemyPool[0].defense));
+        if(dmg < 1) dmg = 1;
+		printf("\nNormal Attack hit: %d damage!\n", dmg);
+		Sleep(1000);
+		checkBattleStatus(pHP, eHP - dmg);
+	}
+	else
+	{
+		printf("\nYou Missed!\n");
+		Sleep(1000);
+		checkBattleStatus(pHP, eHP);
+	}
 }
-void heavyStrike()
+
+void heavyAttack(int pHP, int eHP)
 {
-	getch();
+	int chance = rand() % 100;
+	if(chance < 40)
+	{
+		int dmg = 2 * (kheshig.attack - enemyPool[0].defense);
+        if(dmg < 1) dmg = 1;
+		printf("\nHeavy Strike hit: %d damage!\n", dmg);
+		Sleep(1000);
+		checkBattleStatus(pHP, eHP - dmg);
+	}
+	else
+	{
+		printf("\nYou Missed!\n");
+		Sleep(1000);
+		checkBattleStatus(pHP, eHP);
+	}
 }
-void defense()
-{
-	getch();
-}
-void retreat()
-{
-	getch();
-}
+
 
 void cursorControlWar()
 {
@@ -222,7 +271,6 @@ void cursorControlWar()
         {
         	if(column==0)
         	{
-        		system("cls");
 				warPanel(kheshig.health, enemyPool[0].health);
 			}
 			else if(column==1)

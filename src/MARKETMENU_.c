@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <windows.h>
+#include <time.h>
 
 #include "../include/MARKETMENU_.h"
 

@@ -155,9 +155,6 @@ Test your luck with gambling games to increase or lose gold.
 | **Health** | Character's hitpoints | 100 |
 | **Durability** | Equipment durability/integrity | 100 |
 | **Gold** | Currency for trading and upgrades | 0 |
-
-**Note**: Stats are currently not persisted between sessions (coming in v0.2.0)
-
 ---
 
 ## 🚀 Development Status
@@ -180,19 +177,20 @@ This is an early-stage prototype for educational and development purposes.
 ## 📋 Roadmap
 
 ### v0.2.0 - Menu Systems & Save System
-- [ ] Implement functional War Menu mechanics
+- [x] Implement functional War Menu mechanics
 - [ ] Implement functional Market Menu mechanics
 - [ ] Implement functional Blacksmith Menu mechanics
 - [ ] Implement functional Gambling Menu mechanics
-- [ ] **Create save file system (.dat format)** - Character stats will be persisted to disk
-- [ ] **Character stats persistence** - Load and save character progress between sessions
-- [ ] Load game state from save files
+- [x] **Create save file system (.dat format)** - Character stats will be persisted to disk
+- [x] **Character stats persistence** - Load and save character progress between sessions
+- [x] Load game state from save files
 
 ### v0.3.0 - Combat & AI
 - [ ] Turn-based combat system
 - [ ] Enemy AI implementation
 - [ ] Combat calculations and balance
 - [ ] Experience and leveling system
+- [ ] Add Stamina
 
 ### v0.4.0+ - Advanced Features
 - [ ] Multiple character classes
@@ -279,5 +277,5 @@ Created: January 2026
 
 ---
 
-**Last Updated**: January 20, 2026  
+**Last Updated**: January 27, 2026  
 **Current Version**: v0.1.0-alpha (Non-Production Ready)

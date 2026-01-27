@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <windows.h>
+#include <time.h>
 
 typedef struct Player{
     int health;
@@ -32,8 +33,7 @@ void warMenu();
 void warPanel(int currentHP, int currentEnemyHP);
 void cursorControlWar();
 void PrintBoardWar();
-
-void quickAttack();
-void heavyStrike();
-void defense();
-void retreat();
+void checkBattleStatus(int pHP, int eHP);
+void quickAttack(int pHP, int eHP);
+void normalAttack(int pHP, int eHP);
+void heavyAttack(int pHP, int eHP);
