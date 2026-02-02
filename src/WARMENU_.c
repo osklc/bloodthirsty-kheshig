@@ -63,7 +63,7 @@ const char* victoryTexts[] = {
 	"Swift as the wolf, fierce as the eagle—victory is yours!",
 	"Your foe's courage broke before your blade did.",
 	"The steppe remembers this kill.",
-	"Blood and glory—the old way prevails!",
+	"Blood and glory the old way prevails!",
 	"Your enemy's final breath joins the wind."
 };
 
@@ -97,6 +97,7 @@ void clearWarLog()
     currentLogCount = 0;
 }
 
+
 void appendWarLog(const char *line) {
     if (currentLogCount < MAX_VISIBLE_LOGS) {
         snprintf(warLogs[currentLogCount], WAR_LINE_SIZE, "  %s", line);
@@ -109,9 +110,14 @@ void appendWarLog(const char *line) {
     }
 }
 
-void makeAttackLog(char *out, size_t size,const char *attacker,const char *target,int damage)
+void makeAttackLogEnemy(char *out, size_t size,const char *attacker,const char *target,int damage)
 {
-    snprintf(out, size,"  %s attacks %s for %d damage\n",attacker, target, damage);
+    snprintf(out, size,"  %s attacks %s for \033[31m%d\033[0m damage\n",attacker, target, damage);
+}
+
+void makeAttackLogPlayer(char *out, size_t size,const char *attacker,const char *target,int damage)
+{
+    snprintf(out, size,"  %s attacks %s for \033[32m%d\033[0m damage\n",attacker, target, damage);
 }
 
 
@@ -325,7 +331,7 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx)
         if(enemyDmg < 1) enemyDmg = 1;
         
 		char line[128];
-		makeAttackLog(line, sizeof(line), enemyPool[enemyIdx].name, "Kheshig", enemyDmg);
+		makeAttackLogEnemy(line, sizeof(line), enemyPool[enemyIdx].name, "Kheshig", enemyDmg);
 		appendWarLog(line);
 		int nextPlayerHP = pHP - enemyDmg;
 
@@ -348,7 +354,7 @@ void quickAttack(int pHP, int eHP, int enemyIdx)
 		int dmg = kheshig.attack - enemyPool[enemyIdx].defense;
         if(dmg < 1) dmg = 1;
 		char line[128];
-		makeAttackLog(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].name, dmg);
+		makeAttackLogPlayer(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].name, dmg);
 		appendWarLog(line);
 		checkBattleStatus(pHP, eHP - dmg, enemyIdx);
 	}
@@ -367,7 +373,7 @@ void normalAttack(int pHP, int eHP, int enemyIdx)
 		int dmg = (int)(1.2 * (kheshig.attack - enemyPool[enemyIdx].defense));
         if(dmg < 1) dmg = 1;
 		char line[128];
-		makeAttackLog(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].name, dmg);
+		makeAttackLogPlayer(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].name, dmg);
 		appendWarLog(line);
 		checkBattleStatus(pHP, eHP - dmg, enemyIdx);
 	}
@@ -386,7 +392,7 @@ void heavyAttack(int pHP, int eHP, int enemyIdx)
 		int dmg = 2 * (kheshig.attack - enemyPool[enemyIdx].defense);
         if(dmg < 1) dmg = 1;
 		char line[128];
-		makeAttackLog(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].name, dmg);
+		makeAttackLogPlayer(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].name, dmg);
 		appendWarLog(line);
 		checkBattleStatus(pHP, eHP - dmg, enemyIdx);
 	}

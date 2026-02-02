@@ -6,7 +6,7 @@
 
 #include "../include/MARKETMENU_.h"
 
-char boardMarket[4][32] = {"Buy Health Potion - 50G","Buy Damage Scroll(ATK+3) - 120G","Buy ARMOR (DEF+3) - 120G","Sell Items"};
+char boardMarket[4][40] = {"Buy Health Potion(HEALTH+10) - 50G","Buy Damage Scroll(ATK+3) - 120G","Buy ARMOR (DEF+3) - 120G","Sell Items"};
 
 void marketMenu()
 {
