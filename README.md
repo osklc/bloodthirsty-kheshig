@@ -20,17 +20,18 @@ Bloodthirsty Kheshig is a turn-based arena combat game developed in C, running n
 ## ✨ Features
 
 ### Current Release (v0.2.0-pre-alpha)
-- **Main Menu System** - Navigate between 4 game zones
-- **Character Stat Tracking** - Health, Durability, and Gold management
+- **Main Menu System** - Navigate between 5 game zones
+- **Character Stat Tracking** - Health, XP, Level, Attack, Defense, and Gold management
 - **Save System (Save/Load)** - Automatic progress saving via binary .dat files
 - **Dynamic Battle Log** - Real-time combat log to track damage and events
 - **Multiple Game Zones**:
-  - ⚔️ War Menu - Combat encounters
-  - 🏪 Market Menu - Trading hub
-  - 🔨 Blacksmith Menu - Equipment enhancement
-  - 🎰 Gambling Menu - Risk/reward mechanics
-- **Keyboard-based Navigation** - WASD controls and menu selection
-- **Console UI** - Colorized text interface with ANSI escape codes
+  - ⚔️ War Menu - Combat encounters with multiple difficulty levels
+  - 🏪 Market Menu - Buy potions, damage scrolls, and armor
+  - 🔨 Blacksmith Menu - Upgrade weapons and armor
+  - 🎰 Gambling Menu - Risk/reward mini-games
+  - 🏨 The Inn - Rest and restore health
+- **Keyboard-based Navigation** - W/S for vertical movement, A/D for horizontal movement
+- **Console UI** - Colorized text interface with ANSI escape codes and health bars
 
 ---
 
@@ -108,59 +109,68 @@ make rebuild        # Clean and recompile
 
 ### Running the Game
 ```bash
-.\game.exe
+.\bin\Bloodthirsty-Kheshig.exe
 ```
 
 ### Controls
 | Key | Action |
 |-----|--------|
-| **A** / **D** | Move left/right between zones |
+| **W** / **S** | Move up/down between zones |
+| **A** / **D** | Move left/right between zones (in menus) |
 | **F** | Select/Enter current zone |
-| **Q** | Quit game |
+| **Q** | Quit/Go back to main menu |
 
 ### Main Menu
-- View your character stats at the top of the menu
-- Navigate between zones using **A** and **D** keys
+- View your character stats (HP, Level, XP, Gold, Attack, Defense, Day/Time) at the top
+- Navigate between zones using **W** and **S** keys
 - Press **F** to enter a selected zone
 - Press **Q** to exit the game
+
+### In-Game Menus
+- Use **W** and **S** to move up and down the menu list
+- Press **F** to select an item or action
+- Press **Q** to return to the main menu
 
 ---
 
 ## 🗺️ Game Zones
 
 ### ⚔️ War Menu
-Enter combat encounters, defeat enemies, and earn experience and rewards.
-- **Current Status**: Prototype UI (mechanics in development)
-- **Future**: Full turn-based combat system with enemy AI
+Enter combat encounters across three difficulty zones: Northern Forests, Hell, and Glacial Mountains. Defeat enemies to earn XP and Gold.
+- **Current Status**: ✅ Fully Functional turn-based combat system
+- **Features**: Enemy AI, multiple difficulty levels, dynamic combat log, experience and gold rewards
 
 ### 🏪 Market Menu
-Buy and sell items, manage inventory, and trade with merchants.
-- **Current Status**: Prototype UI (mechanics in development)
-- **Future**: Dynamic pricing, quest rewards, rare items
+Buy health potions, damage scrolls, and armor to strengthen your character.
+- **Current Status**: ✅ Fully Functional
+- **Features**: Buy Health Potion (Health+50) - 20G, Buy Damage Scroll (ATK+3) - 120G, Buy Armor (DEF+3) - 120G, Sell Items
 
 ### 🔨 Blacksmith Menu
-Enhance your equipment, repair damaged gear, and forge new weapons.
-- **Current Status**: Prototype UI (mechanics in development)
-- **Future**: Durability system, equipment tiers, crafting recipes
+Upgrade your weapons and armor with random stat boosts.
+- **Current Status**: ✅ Fully Functional
+- **Features**: Sword Upgrade (ATK+1 to ATK+3) - 90G, Armor Upgrade (DEF+1 to DEF+3) - 90G
 
 ### 🎰 Gambling Menu
 Test your luck with gambling games to increase or lose gold.
-- **Current Status**: Prototype UI (mechanics in development)
-- **Future**: Multiple gambling games, progressive betting
+- **Current Status**: ⏳ In Development
+- **Planned**: Coin Flip, Dice Roll, Underground Arena mini-games
 
 ---
 
 ## 🚀 Development Status
 
 ### Current Version: v0.2.0 (Pre-Alpha)
-- ✅ Menu Navigation
-- ✅ Combat Mechanics (Basic Attacks, Enemy AI)
+- ✅ Menu Navigation with 5 zones
+- ✅ Combat Mechanics (Attacks, Defense, Enemy AI with scaling difficulty)
 - ✅ Save System (Save/Load)
-- ✅ Colored UI & Battle Log
-- ❌ Market & Blacksmith (Not implemented yet)
+- ✅ Colored UI & Dynamic Battle Log
+- ✅ Market Menu (Buy/Sell items)
+- ✅ Blacksmith Menu (Equipment upgrades)
+- ✅ The Inn (Rest and restore health)
+- ⏳ Gambling Menu (Planned)
 
-### Status: **Non-Production Ready**
-This is an early-stage prototype for educational and development purposes.
+### Status: **Playable Pre-Alpha**
+Core game mechanics are functional. This is an early-stage project for educational purposes.
 
 ---
 
@@ -196,23 +206,31 @@ This is an early-stage prototype for educational and development purposes.
 
 ### Project Structure
 ```
-Turn-Based Arena Fighter/
+Turn-Based Arena Fighter in terminal/
 ├── main.c                          # Main game loop and menu system
-├── menus/
-│   ├── BLACKSMITHMENU_.c/.h       # Blacksmith functionality
-│   ├── GAMBLINGMENU_.c/.h         # Gambling system
-│   ├── MARKETMENU_.c/.h           # Market/trading system
-│   ├── WARMENU_.c/.h              # War/combat system
-│   └── CURSORCONTROL_.c/.h        # Console control utilities
-├── Makefile                        # Build configuration
+├── include/
+│   ├── BLACKSMITHMENU_.h           # Blacksmith header
+│   ├── GAMBLINGMENU_.h             # Gambling header
+│   ├── MARKETMENU_.h               # Market header
+│   ├── WARMENU_.h                  # War/combat header
+│   └── INNMENU_.h                  # Inn header
+├── src/
+│   ├── BLACKSMITHMENU_.c           # Blacksmith functionality
+│   ├── GAMBLINGMENU_.c             # Gambling system
+│   ├── MARKETMENU_.c               # Market/trading system
+│   ├── WARMENU_.c                  # War/combat system
+│   ├── INNMENU_.c                  # Inn rest system
+│   └── resource.rc                 # Resource file
+├── bin/                            # Compiled executables
+├── assets/                         # Game assets
 ├── make.bat                        # Windows batch build script
 └── README.md                       # This file
 ```
 
 ### Build System
 - **Compiler**: GCC with `-Wall` (all warnings) and `-g` (debug symbols)
-- **Target**: Windows executable (game.exe)
-- **Build Tool**: Make with MSYS2 integration
+- **Target**: Windows executable (Bloodthirsty-Kheshig.exe)
+- **Build Tool**: Batch script (make.bat) with GCC integration
 
 ### Libraries Used
 - `stdio.h` - Standard I/O
@@ -267,5 +285,5 @@ Created: January 2026
 
 ---
 
-**Last Updated**: January 28, 2026  
-**Current Version**: v0.2.0 (Pre-Alpha) (Non-Production Ready)
+**Last Updated**: February 4, 2026  
+**Current Version**: v0.2.0 (Pre-Alpha)
