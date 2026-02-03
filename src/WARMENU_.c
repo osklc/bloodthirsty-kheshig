@@ -507,7 +507,6 @@ void cursorControlWar()
 		PrintBoardWar();
 		//printf("\nActive Cell: [%d , %d]", row, column); // For Debug
 		printf("\n[A-D] Move  |  [F] Select  |  [Q] Back to main menu\n");
-		printf("\n%s\n", viewLineWar);
 		selectedDirection = getch();
 		
         if(selectedDirection == 'A' || selectedDirection == 'a' || selectedDirection == 75)

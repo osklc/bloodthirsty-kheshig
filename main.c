@@ -7,15 +7,14 @@
 
 #include "include/WARMENU_.h"
 #include "include/MARKETMENU_.h"
-#include "include/GAMBLINGMENU_.h"
 #include "include/BLACKSMITHMENU_.h"
 #include "include/INNMENU_.h"
 
 int row=0;
 int column=0;
-char boardMain[5][20] = {"War","Market","Blacksmith","Gambling", "The Inn"};
+char boardMain[4][20] = {"War","Market","Blacksmith", "The Inn"};
 
-char viewLine[] = "=======================================================================";
+char viewLine[] = "========================================================";
 
 struct Player kheshig;
 
@@ -264,8 +263,7 @@ void playerStats(char menuName[], int menuNameSize, int viewLineSize, char *view
 		printf(" ");
 	}
 	
-	// Menu adına göre farklı renk seç
-	char *menuColor = "\033[94m"; // Varsayılan mavi
+	char *menuColor = "\033[94m"; // mavi
 	if(strcmp(menuName, "MAIN MENU") == 0) {
 		menuColor = "\033[92m"; // Yeşil
 	} else if(strcmp(menuName, "WAR MENU") == 0) {
@@ -274,10 +272,8 @@ void playerStats(char menuName[], int menuNameSize, int viewLineSize, char *view
 		menuColor = "\033[93m"; // Sarı
 	} else if(strcmp(menuName, "BLACKSMITH MENU") == 0) {
 		menuColor = "\033[95m"; // Mor
-	} else if(strcmp(menuName, "GAMBLING MENU") == 0) {
-		menuColor = "\033[96m"; // Cyan
 	} else if(strcmp(menuName, "THE INN") == 0) {
-		menuColor = "\033[97m"; // Beyaz
+		menuColor = "\033[96m"; // Cyan
 	}
 	
 	printf("%s\033[3m%s\033[0m", menuColor, menuName);
@@ -335,18 +331,17 @@ void cursorControl()
 		PrintBoard();
 		//printf("\nActive Cell: [%d , %d]", row, column); // For Debug
 		printf("\n[A-D] Move  |  [F] Select  |  [Q] Quit\n");
-		printf("\n%s\n",viewLine);
 		selectedDirection = getch();
 		
         if(selectedDirection == 'A' || selectedDirection == 'a' || selectedDirection == 75)
         {
             column--;
-            if(column < 0) column = 4;
+            if(column < 0) column = 3;
         }
         else if(selectedDirection == 'D' || selectedDirection == 'd' || selectedDirection == 77)
         {
             column++;
-            if(column > 4) column = 0;
+            if(column > 3) column = 0;
         }
         else if(selectedDirection == 'F' || selectedDirection == 'f')
         {
@@ -372,12 +367,6 @@ void cursorControl()
 			{
 				column=0;
 				system("cls");
-				gamblingMenu();
-			}
-			else if(column==4)
-			{
-				column=0;
-				system("cls");
 				innMenu();
 			}
 		}
@@ -399,7 +388,7 @@ void cursorControl()
 void PrintBoard()
 {
 	int i,j,m,n;
-	int columnSize = 5;
+	int columnSize = 4;
 	
 	for(i=0;i<1;i++)
 	{

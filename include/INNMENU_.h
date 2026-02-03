@@ -26,3 +26,4 @@ void playerStats(char menuName[], int menuNameSize, int viewLineSize, char *view
 void innMenu();
 void cursorControlInn();
 void printInnList();
+void playGambling();
