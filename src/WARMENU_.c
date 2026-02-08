@@ -251,6 +251,8 @@ void escapeWar(int enemyIdx)
         printf("%s\n", viewLineEscape);
 		printf("                      \033[33m\033[1m<<< KHESHIG RETREATED >>>\033[0m\n");
         printf("%s\n", viewLineEscape);
+		advanceTimePeriod(1);
+		advanceTime();
 
 		int retreatCount = sizeof(retreatTexts) / sizeof(retreatTexts[0]);
         int idx = rand() % retreatCount;
@@ -280,6 +282,8 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
         printf("%s\n", viewLineBattle);
 		printf("                \033[32m\033[1m!!! BATTLE VICTORIOUS !!!\033[0m\n");
         printf("%s\n", viewLineBattle);
+		advanceTimePeriod(1);
+		advanceTime();
         
         printf("\n    Kheshig has defeated the %s!\n", enemyPool[enemyIdx].name);
 		int victoryCount = sizeof(victoryTexts) / sizeof(victoryTexts[0]);
@@ -332,6 +336,8 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
         printf("%s\n", viewLineBattle);
 		printf("                \033[31m\033[1mXXX KHESHIG HAS FALLEN XXX\033[0m\n");
         printf("%s\n", viewLineBattle);
+		advanceTimePeriod(1);
+		advanceTime();
         
         printf("\n    You were bested by the %s.\n", enemyPool[enemyIdx].name);
         

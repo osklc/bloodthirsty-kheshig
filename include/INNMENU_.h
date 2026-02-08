@@ -23,7 +23,9 @@ extern void FirstIntroductionMenu();
 extern void gameSave();
 void playerStats(char menuName[], int menuNameSize, int viewLineSize, char *viewLineVariable);
 
+void noGoldGambling();
 void innMenu();
 void cursorControlInn();
 void printInnList();
 void playGambling();
+void printGamblingList();

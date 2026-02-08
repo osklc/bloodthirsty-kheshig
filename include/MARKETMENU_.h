@@ -22,6 +22,7 @@ extern void FirstIntroductionMenu();
 extern void gameSave();
 void playerStats(char menuName[], int menuNameSize, int viewLineSize, char *viewLineVariable);
 
+void noGoldMarket();
 void marketMenu();
 void cursorControlMarket();
 void printMarketList();

@@ -17,6 +17,16 @@ void marketMenu()
 	cursorControlMarket();
 }
 
+void noGoldMarket()
+{
+	printf("\033[31mYou don't have enough gold!\033[0m");
+	printf("\n%s\n", viewLineMarket);
+	printf("Press any key to continue...");
+	printf("\n%s\n", viewLineMarket);
+	getch();
+	marketMenu();
+}
+
 void cursorControlMarket()
 {
 	char selectedDirection = '\0';
@@ -46,12 +56,7 @@ void cursorControlMarket()
         	{
 				if(kheshig.gold<20)
 				{
-					printf("\033[31mYou don't have enough gold!\033[0m");
-					printf("\n%s\n", viewLineMarket);
-					printf("Press any key to return to the main menu.");
-					printf("\n%s\n", viewLineMarket);
-					getch();
-					FirstIntroductionMenu();
+					noGoldMarket();
 				}
 				kheshig.gold-=20;
 				kheshig.activeHealth+=50;
@@ -67,12 +72,7 @@ void cursorControlMarket()
 			{
 				if(kheshig.gold<120)
 				{
-					printf("\033[31mYou don't have enough gold!\033[0m");
-					printf("\n%s\n", viewLineMarket);
-					printf("Press any key to return to the main menu.");
-					printf("\n%s\n", viewLineMarket);
-					getch();
-					FirstIntroductionMenu();
+					noGoldMarket();
 				}
 				kheshig.gold-=120;
 				kheshig.attack+=3;
@@ -84,12 +84,7 @@ void cursorControlMarket()
 			{
 				if(kheshig.gold<120)
 				{
-					printf("\033[31mYou don't have enough gold!\033[0m");
-					printf("\n%s\n", viewLineMarket);
-					printf("Press any key to return to the main menu.");
-					printf("\n%s\n", viewLineMarket);
-					getch();
-					FirstIntroductionMenu();
+					noGoldMarket();
 				}
 				kheshig.gold-=120;
 				kheshig.defense+=3;
@@ -110,10 +105,8 @@ void cursorControlMarket()
 		}
 		else
 		{
-			//printf("\n\033[3m\033[31mERROR:\033[0m %c is not a valid value. Please enter valid input!", selectedDirection);
-			//Sleep(1000);
+
 		}
-        
 	}
 }
 

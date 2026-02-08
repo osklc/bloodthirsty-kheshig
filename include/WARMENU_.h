@@ -36,6 +36,9 @@ extern int column;
 extern void FirstIntroductionMenu();
 extern void gameSave();
 extern void xpLevelCalc();
+extern void advanceTime();
+extern void advanceTimePeriod(int time);
+
 void playerStats(char menuName[], int menuNameSize, int viewLineSize, char *viewLineVariable);
 
 void warMenu();
