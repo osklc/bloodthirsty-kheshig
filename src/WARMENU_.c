@@ -187,9 +187,11 @@ void warPanel(int currentHP, int currentEnemyHP, int enemyIdx)
 	printf("[%s]\n",choicedEnemiesName);
 
 	char kheshigHPStr[25];
+	if(currentHP<0) currentHP=0;
 	snprintf(kheshigHPStr, 25, "  HP: %d/%d", currentHP, kheshig.health);
 
 	char enemyHPStr[25];
+	if(currentEnemyHP<0) currentEnemyHP=0;
 	snprintf(enemyHPStr, 25, "  HP: %d/%d", currentEnemyHP, enemyPool[enemyIdx].health);
 
 	printf("%s", kheshigHPStr);
@@ -332,7 +334,7 @@ void escapeWar(int enemyIdx)
 
 void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
 {
-	char viewLineBattle[] = "===========================================================";
+	char viewLineBattle[] = "======================================================================";
 	if(eHP <= 0)
 	{
 		printf("Press any key to continue...");
@@ -368,6 +370,8 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
 	}
 	else if(pHP <= 0)
 	{
+		printf("Press any key to continue...");
+		getch();
 		system("cls");
 		int loss;
 		if(enemyPool[enemyIdx].goldReward<100)
