@@ -44,6 +44,8 @@ int main()
 		kheshig.level=0;
 		kheshig.health=100;
 		kheshig.activeHealth=100;
+		kheshig.activeStamina=100;
+   	 	kheshig.maxStamina=100;
 		kheshig.xp=0;
 		kheshig.currentDay=0;
     	kheshig.loopCount=0;
@@ -224,6 +226,7 @@ void hideCursor() {
 void FirstIntroductionMenu()
 {
 	system("cls");
+	kheshig.activeStamina = kheshig.maxStamina;
 	cursorControl();
 }
 

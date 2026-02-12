@@ -247,6 +247,27 @@ void warPanel(int currentHP, int currentEnemyHP, int enemyIdx)
 	}
 	printf("]");
 
+	printf("\n\033[33m  Stamina:\033[0m %d/%d \n  ",kheshig.activeStamina ,kheshig.maxStamina);
+	printf("[");
+	int k = 0;
+	float staminaRatio = (float)kheshig.activeStamina / kheshig.maxStamina;
+	if (staminaRatio < 0) staminaRatio = 0;
+	int kheshigStaminaBar = (int)(10 * staminaRatio);
+	while(k<10)
+	{
+		for(int a=0;a<kheshigStaminaBar;a++)
+		{
+			k++;
+			printf("|");
+		}
+		while(k<10)
+		{
+			k++;
+			printf(".");
+		}
+	}
+	printf("]\n");
+
 	printf("\n%s\n", viewLineWar);
 	printf("                   --- BATTLE LOG ---\n");
 	for(int i=0;i<currentLogCount;i++)
@@ -262,6 +283,12 @@ void warPanel(int currentHP, int currentEnemyHP, int enemyIdx)
 	printf("  1. Quick Attack  | 2. Normal Attack | 3. Heavy Attack\n");
 	printf("  4. Defense       | 5. Escape - Lose Gold\n");
 	printf("%s\n", viewLineWar);
+
+	if(currentHP <= 0 || currentEnemyHP <= 0)
+	{
+		checkBattleStatus(currentHP, currentEnemyHP, enemyIdx, 0);
+		return;
+	}
 
 	char choice;
 	do {
@@ -308,6 +335,8 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
 	char viewLineBattle[] = "===========================================================";
 	if(eHP <= 0)
 	{
+		printf("Press any key to continue...");
+		getch();
 		system("cls");
         printf("%s\n", viewLineBattle);
 		printf("                \033[32m\033[1m!!! BATTLE VICTORIOUS !!!\033[0m\n");
@@ -411,20 +440,10 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
 			char line[128];
 			makeAttackLogEnemy(line, sizeof(line), enemyPool[enemyIdx].name, "Kheshig", enemyDmg);
 			appendWarLog(line);
-			int nextPlayerHP = pHP - enemyDmg;
 
-			if(nextPlayerHP <= 0)
-			{
-				checkBattleStatus(0,eHP,enemyIdx, 1);
-			}
-			else
-			{
-				warPanel(nextPlayerHP, eHP, enemyIdx);
-			}
 		}
 		else
 		{
-			warPanel(pHP,eHP,enemyIdx);
 		}
 		
 	}
@@ -432,6 +451,14 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
 
 void defense(int pHP, int eHP, int enemyIdx)
 {
+	int defenseStaminaEarn = 10;
+
+	kheshig.activeStamina += defenseStaminaEarn;
+	if(kheshig.activeStamina > kheshig.maxStamina)
+	{
+		kheshig.activeStamina = kheshig.maxStamina;
+	}
+
 	int chance = rand() % 100;
 	int def = enemyPool[enemyIdx].attack - kheshig.defense;
 	if(chance<50)
@@ -445,72 +472,149 @@ void defense(int pHP, int eHP, int enemyIdx)
 			char line[128];
 			makeDefendLog(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].attack, def);
 			appendWarLog(line);
-			checkBattleStatus(pHP-def, eHP, enemyIdx, 0);
 		}
+		warPanel(pHP-def, eHP, enemyIdx);
 	}
 	else
 	{
 		char counterLine[128];
 		makeCounterStrikeLog(counterLine, sizeof(counterLine), "Kheshig", enemyPool[enemyIdx].name, def);
 		appendWarLog(counterLine);
-		checkBattleStatus(pHP, eHP-def, enemyIdx, 0);
+		warPanel(pHP, eHP-def, enemyIdx);
 	}
 }
 
 void quickAttack(int pHP, int eHP, int enemyIdx)
 {
-	int chance = rand() % 100;
-	if(chance < 90)
+	int quickStaminaLose = 15;
+	if(kheshig.activeStamina<quickStaminaLose)
 	{
-		int dmg = kheshig.attack - enemyPool[enemyIdx].defense;
-        if(dmg < 1) dmg = 1;
-		char line[128];
-		makeAttackLogPlayer(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].name, dmg);
-		appendWarLog(line);
-		checkBattleStatus(pHP, eHP - dmg, enemyIdx, 1);
+		appendWarLog("You ran out of breath! Try to defend.\n");
+		warPanel(pHP, eHP, enemyIdx);
+		return;
 	}
 	else
 	{
-		appendWarLog("Kheshig missed their Quick Attack!\n");
-		checkBattleStatus(pHP, eHP, enemyIdx, 1);
+		kheshig.activeStamina -= quickStaminaLose;
+		int chance = rand() % 100;
+		if(chance < 90)
+		{
+			int dmg = kheshig.attack - enemyPool[enemyIdx].defense;
+			if(dmg < 1) dmg = 1;
+			char line[128];
+			makeAttackLogPlayer(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].name, dmg);
+			appendWarLog(line);
+			
+			if(eHP - dmg > 0)
+			{
+				int chanceFactor = 10 + rand() % 10;
+				int enemyDmg = (chanceFactor*(enemyPool[enemyIdx].attack - kheshig.defense))/10;
+				if(enemyDmg < 1) enemyDmg = 1;
+				char eLine[128];
+				makeAttackLogEnemy(eLine, sizeof(eLine), enemyPool[enemyIdx].name, "Kheshig", enemyDmg);
+				appendWarLog(eLine);
+				warPanel(pHP - enemyDmg, eHP - dmg, enemyIdx);
+			}
+			else
+			{
+				warPanel(pHP, eHP - dmg, enemyIdx);
+			}
+		}
+		else
+		{
+			appendWarLog("Kheshig missed their Quick Attack!\n");
+			warPanel(pHP, eHP, enemyIdx);
+		}
 	}
 }
 
 void normalAttack(int pHP, int eHP, int enemyIdx)
 {
-	int chance = rand() % 100;
-	if(chance < 75)
+	int normalStaminaLose = 25;
+	if(kheshig.activeStamina<normalStaminaLose)
 	{
-		int dmg = (int)(1.2 * (kheshig.attack - enemyPool[enemyIdx].defense));
-        if(dmg < 1) dmg = 1;
-		char line[128];
-		makeAttackLogPlayer(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].name, dmg);
-		appendWarLog(line);
-		checkBattleStatus(pHP, eHP - dmg, enemyIdx, 1);
+		appendWarLog("You ran out of breath! Try a lighter move.\n");
+		warPanel(pHP, eHP, enemyIdx);
+		return;
 	}
+
 	else
 	{
-		appendWarLog("Kheshig missed their Normal Attack!\n");
-		checkBattleStatus(pHP, eHP, enemyIdx, 1);
+		kheshig.activeStamina -= normalStaminaLose;
+		int chance = rand() % 100;
+		if(chance < 75)
+		{
+			int dmg = (int)(1.2 * (kheshig.attack - enemyPool[enemyIdx].defense));
+			if(dmg < 1) dmg = 1;
+			char line[128];
+			makeAttackLogPlayer(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].name, dmg);
+			appendWarLog(line);
+			
+			if(eHP - dmg > 0)
+			{
+				int chanceFactor = 10 + rand() % 10;
+				int enemyDmg = (chanceFactor*(enemyPool[enemyIdx].attack - kheshig.defense))/10;
+				if(enemyDmg < 1) enemyDmg = 1;
+				char eLine[128];
+				makeAttackLogEnemy(eLine, sizeof(eLine), enemyPool[enemyIdx].name, "Kheshig", enemyDmg);
+				appendWarLog(eLine);
+				warPanel(pHP - enemyDmg, eHP - dmg, enemyIdx);
+			}
+			else
+			{
+				warPanel(pHP, eHP - dmg, enemyIdx);
+			}
+		}
+		else
+		{
+			appendWarLog("Kheshig missed their Normal Attack!\n");
+			warPanel(pHP, eHP, enemyIdx);
+		}
 	}
 }
 
 void heavyAttack(int pHP, int eHP, int enemyIdx)
 {
-	int chance = rand() % 100;
-	if(chance < 40)
+	int heavyStaminaLose = 35;
+	if(kheshig.activeStamina<heavyStaminaLose)
 	{
-		int dmg = 2 * (kheshig.attack - enemyPool[enemyIdx].defense);
-        if(dmg < 1) dmg = 1;
-		char line[128];
-		makeAttackLogPlayer(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].name, dmg);
-		appendWarLog(line);
-		checkBattleStatus(pHP, eHP - dmg, enemyIdx, 1);
+		appendWarLog("You ran out of breath! Try a lighter move.\n");
+		warPanel(pHP, eHP, enemyIdx);
+		return;
 	}
+
 	else
 	{
-		appendWarLog("Kheshig missed their Heavy Attack!\n");
-		checkBattleStatus(pHP, eHP, enemyIdx, 1);
+		kheshig.activeStamina -= heavyStaminaLose;
+		int chance = rand() % 100;
+		if(chance < 70)
+		{
+			int dmg = 2 * (kheshig.attack - enemyPool[enemyIdx].defense);
+			if(dmg < 1) dmg = 1;
+			char line[128];
+			makeAttackLogPlayer(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].name, dmg);
+			appendWarLog(line);
+			
+			if(eHP - dmg > 0)
+			{
+				int chanceFactor = 10 + rand() % 10;
+				int enemyDmg = (chanceFactor*(enemyPool[enemyIdx].attack - kheshig.defense))/10;
+				if(enemyDmg < 1) enemyDmg = 1;
+				char eLine[128];
+				makeAttackLogEnemy(eLine, sizeof(eLine), enemyPool[enemyIdx].name, "Kheshig", enemyDmg);
+				appendWarLog(eLine);
+				warPanel(pHP - enemyDmg, eHP - dmg, enemyIdx);
+			}
+			else
+			{
+				warPanel(pHP, eHP - dmg, enemyIdx);
+			}
+		}
+		else
+		{
+			appendWarLog("Kheshig missed their Heavy Attack!\n");
+			warPanel(pHP, eHP, enemyIdx);
+		}
 	}
 }
 

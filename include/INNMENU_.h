@@ -8,6 +8,8 @@
 typedef struct Player{
     int health;
     int activeHealth;
+    int activeStamina;
+    int maxStamina;
     int gold;
     int level;
 	int attack;

@@ -4,9 +4,11 @@
 #include <windows.h>
 #include <time.h>
 
-struct Player{
+typedef struct Player{
     int health;
     int activeHealth;
+    int activeStamina;
+    int maxStamina;
     int gold;
     int level;
 	int attack;
@@ -15,7 +17,7 @@ struct Player{
     int currentDay;
     int loopCount;
     int currentTimePeriod;
-};
+}Player;
 extern struct Player kheshig;
 
 extern void FirstIntroductionMenu();

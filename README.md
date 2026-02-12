@@ -207,12 +207,18 @@ Core game mechanics are functional. This is an early-stage project for education
 - [ ] Dynamic XP & Gold: Rewards will vary based on RNG (Random Number Generation)
 - [ ] Expanded Market: Introduction of XP Potions and special scrolls
 
-### v0.4.0+ - Atmosphere & Story
-- [ ] ANSI Art Storytelling: Visual narrative using colored ASCII art for regions and bosses
-- [ ] Advanced Enemy AI: Enemies may flee or heal when low on health
-- [ ] Multiple character classes (Warrior, Archer, Shaman)
-- [ ] Quest system
-- [ ] "Endless Mode" (Survival)
+### v0.4.0+ - Atmosphere & Story (The "Possession" Update)
+- [ ] **Possession Bar System**: A corruption/possession meter that fills during battles and story progression
+- [ ] **Demonic Transformation**: When the Possession Bar fills completely, an ancient demon possesses Kheshig during combat
+- [ ] **Mage Form**: Upon possession, Kheshig transforms into a sorcerer with:
+  - Mana system (replaces Stamina) for spell casting
+  - Magical attacks with higher damage scaling
+  - Unique visual feedback and combat mechanics
+- [ ] **Story Integration**: Narrative consequences and choices related to the possession mechanic
+- [ ] **ANSI Art Storytelling**: Visual narrative using colored ASCII art for regions, bosses, and story events
+- [ ] **Advanced Enemy AI**: Enemies may flee or heal when low on health
+- [ ] **Multiple Character Classes**: Warrior (default) and Wizard (post-possession variant)
+- [ ] **Quest System**: Story-driven quests with rewards and progression
 
 ---
 
