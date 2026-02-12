@@ -10,11 +10,11 @@
 #define WAR_LINE_SIZE 1024
 #define MAX_VISIBLE_LOGS 5
 
-#define NORTHERN_FORESTS_START 0
-#define NORTHERN_FORESTS_END 9
-#define ENCHANTED_GROVES_START 10
-#define ENCHANTED_GROVES_END 19
-#define SPIRIT_REALM_START 20
+#define SILENT_WOODS_START 0
+#define SILENT_WOODS_END 9
+#define ROTTING_GLADE_START 10
+#define ROTTING_GLADE_END 19
+#define VOID_HORIZON_START 20
 
 #include "../include/WARMENU_.h"
 
@@ -29,42 +29,73 @@ char warLogs[MAX_VISIBLE_LOGS][WAR_LINE_SIZE];
 int currentLogCount = 0;
 
 Enemy enemyPool[] = {
-    // --- NORTHERN FORESTS (Level 0-9) - Early game, mostly winnable
-    {"Northern Forests", "Grey Wolf",           35,  12,  1,  25, 0,  35},
-    {"Northern Forests", "Wild Boar",           45,  13,  2,  30, 1,  38},
-    {"Northern Forests", "Rabid Fox",           38,  14,  2,  28, 2,  40},
-    {"Northern Forests", "Forest Bandit",       55,  15,  3,  35, 3,  42},
-    {"Northern Forests", "Brown Bear",          75,  16,  4,  40, 4,  45},
-    {"Northern Forests", "Outlaw Archer",       60,  17,  3,  38, 5,  43},
-    {"Northern Forests", "Feral Lynx",          50,  18,  2,  36, 5,  41},
-    {"Northern Forests", "Mountain Lion",       80,  19,  5,  42, 6,  46},
-    {"Northern Forests", "Bandit Chief",        100, 20,  6,  50, 7,  48},
-    {"Northern Forests", "Timber Wolf Pack",    110, 22,  7,  55, 9,  50},
+    // --- THE SILENT WOODS (Level 0-9) - Reality starts to feel "Off"
+    // "Grey Wolf" -> "Pale Wolf" (Rengi solmuş, hasta gibi)
+    {"Silent Woods", "Pale Wolf",               35,  12,  1,  25, 0,  35},
+    // "Wild Boar" -> "Staring Boar" (Saldırmıyor, sadece sana bakıyor... ta ki sen saldırana kadar)
+    {"Silent Woods", "Staring Boar",            45,  13,  2,  30, 1,  38},
+    // "Rabid Fox" -> "Mimic Fox" (Tilki sesi değil, çocuk sesi çıkarıyor)
+    {"Silent Woods", "Mimic Fox",               38,  14,  2,  28, 2,  40},
+    // "Forest Bandit" -> "Hollow Wanderer" (Yüzü yok, sadece kıyafet)
+    {"Silent Woods", "Hollow Wanderer",         55,  15,  3,  35, 3,  42},
+    // "Brown Bear" -> "Static Bear" (Bazen olduğu yerde donup kalıyor, glitch gibi)
+    {"Silent Woods", "Static Bear",             75,  16,  4,  40, 4,  45},
+    // "Outlaw Archer" -> "Stuck Hunter" (Aynı cümleyi sürekli tekrar ediyor)
+    {"Silent Woods", "Stuck Hunter",        60,  17,  3,  38, 5,  43},
+    // "Feral Lynx" -> "Shadowless Lynx" (Gölgesi yok)
+    {"Silent Woods", "Shadowless Lynx",         50,  18,  2,  36, 5,  41},
+    // "Mountain Lion" -> "Twisted Lion" (Boynu imkansız bir açıda kırık ama yaşıyor)
+    {"Silent Woods", "Twisted Lion",            80,  19,  5,  42, 6,  46},
+    // "Bandit Chief" -> "The Forgotton One" (Kim olduğunu unutmuş, sadece öldürüyor)
+    {"Silent Woods", "The Forgotten One",       100, 20,  6,  50, 7,  48},
+    // "Timber Wolf Pack" -> "Merged Pack" (Birbirine yapışmış birden fazla kurt)
+    {"Silent Woods", "Merged Pack",             110, 22,  7,  55, 9,  50},
 
-    // --- ENCHANTED GROVES (Level 10-19) - Need some gear upgrades
-    {"Enchanted Groves", "Glowing Stag",        120, 24,  6,  65, 10, 60},
-    {"Enchanted Groves", "Thornback Badger",    130, 26,  8,  75, 11, 65},
-    {"Enchanted Groves", "Whispering Owl",      110, 27,  7,  70, 12, 63},
-    {"Enchanted Groves", "Moonlit Fox",         125, 28,  7,  75, 13, 65},
-    {"Enchanted Groves", "Ancient Treant",      160, 30,  10, 90, 14, 70},
-    {"Enchanted Groves", "Spore-Touched Bear",  145, 31,  9,  85, 15, 68},
-    {"Enchanted Groves", "Vine Strangler",      135, 32,  9,  80, 16, 67},
-    {"Enchanted Groves", "Fae-Touched Wolf",    130, 33,  8,  82, 17, 69},
-    {"Enchanted Groves", "Crystal Beetle",      115, 35,  12, 78, 16, 66},
-    {"Enchanted Groves", "Elder Dryad",         150, 38,  14, 105, 19, 74},
+    // --- THE ROTTING GLADE (Level 10-19) - Flesh and nature fuse painfully
+    // "Glowing Stag" -> "Mourner Stag" (Gözlerinden kan değil, siyah bir sıvı akıyor)
+    {"Rotting Glade", "Mourner Stag",           120, 24,  6,  65, 10, 60},
+    // "Thornback Badger" -> "Flesh-Bark Badger" (Deri yerine ağaç kabuğu, içinde et var)
+    {"Rotting Glade", "Flesh-Bark Badger",      130, 26,  8,  75, 11, 65},
+    // "Whispering Owl" -> "Observer Owl" (Tek bir devasa insan gözüne sahip)
+    {"Rotting Glade", "Observer Owl",           110, 27,  7,  70, 12, 63},
+    // "Moonlit Fox" -> "Displaced Fox" (Sürekli ışınlanıyor, gerçeklikten kopmuş)
+    {"Rotting Glade", "Displaced Fox",          125, 28,  7,  75, 13, 65},
+    // "Ancient Treant" -> "Gorged Root" (Kökleri insan cesetleriyle beslenmiş)
+    {"Rotting Glade", "Gorged Root",            160, 30,  10, 90, 14, 70},
+    // "Spore-Touched Bear" -> "Mold Host" (Ayı artık yok, sadece yürüyen küf)
+    {"Rotting Glade", "What Was Bear",              145, 31,  9,  85, 15, 68},
+    // "Vine Strangler" -> "Nerve Strangler" (Sarmaşık değil, devasa sinir sistemleri)
+    {"Rotting Glade", "Nerve Strangler",        135, 32,  9,  80, 16, 67},
+    // "Fae-Touched Wolf" -> "Many-Legged Wolf" (Lovecraftvari uzuv çoğalması)
+    {"Rotting Glade", "Many-Legged Wolf",       130, 33,  8,  82, 17, 69},
+    // "Crystal Beetle" -> "Fractal Beetle" (Baktıkça baş ağrıtan geometrik şekil)
+    {"Rotting Glade", "Fractal Beetle",         115, 35,  12, 78, 16, 66},
+    // "Elder Dryad" -> "Mother of Sorrows" (Doğa ana değil, acı anası)
+    {"Rotting Glade", "Mother of Sorrows",      150, 38,  14, 105, 19, 74},
 
-    // --- SPIRIT REALM (Level 20-32) - Dangerous, require solid upgrades
-    {"Spirit Realm", "Lost Soul",               180, 40,  12, 120, 20, 85},
-    {"Spirit Realm", "Phantom Hunter",          200, 42,  14, 135, 22, 90},
-    {"Spirit Realm", "Ethereal Wisp",           165, 43,  11, 125, 21, 88},
-    {"Spirit Realm", "Banshee Warden",          220, 45,  16, 150, 24, 95},
-    {"Spirit Realm", "Spectral Knight",         250, 47,  18, 165, 26, 100},
-    {"Spirit Realm", "Void Stalker",            230, 48,  16, 160, 25, 98},
-    {"Spirit Realm", "Ancestral Guardian",      280, 50,  20, 180, 28, 105},
-    {"Spirit Realm", "Shadow Wraith",           210, 51,  15, 155, 27, 102},
-    {"Spirit Realm", "Soul Reaver",             300, 53,  22, 195, 29, 110},
-    {"Spirit Realm", "Nightmare Manifestation", 350, 55,  25, 220, 30, 115},
-    {"Spirit Realm", "Ancient Spirit Lord",     400, 57,  28, 250, 32, 120}
+    // --- THE VOID HORIZON (Level 20-32) - Cosmic Horror & The Unknowable
+    // "Lost Soul" -> "Silhouette of Kheshig" (Oyuncunun kendisine benziyor)
+    {"Void Horizon", "Silhouette of Kheshig",       180, 40,  12, 120, 20, 85},
+    // "Phantom Hunter" -> "The Gaze" (Sadece havada süzülen dev bir göz)
+    {"Void Horizon", "The Gaze",                200, 42,  14, 135, 22, 90},
+    // "Ethereal Wisp" -> "Color Out of Space" (Tarif edilemeyen bir renk)
+    {"Void Horizon", "Color Out of Space",      165, 43,  11, 125, 21, 88},
+    // "Banshee Warden" -> "Screaming Geometry" (Şekiller çığlık atıyor)
+    {"Void Horizon", "Screaming Geometry",      220, 45,  16, 150, 24, 95},
+    // "Spectral Knight" -> "Empty Armor" (İçinde hiçlik var)
+    {"Void Horizon", "The Hollow Knight",             250, 47,  18, 165, 26, 100},
+    // "Void Stalker" -> "The Whisperer" (Kulağına delice şeyler fısıldıyor)
+    {"Void Horizon", "The Whisperer",           230, 48,  16, 160, 25, 98},
+    // "Ancestral Guardian" -> "Faceless Idol" (Eski tanrıların yüzsüz heykeli)
+    {"Void Horizon", "The Forgotten God",           280, 50,  20, 180, 28, 105},
+    // "Shadow Wraith" -> "Crawling Chaos" (Kaosun vücut bulmuş hali)
+    {"Void Horizon", "Crawling Chaos",          210, 51,  15, 155, 27, 102},
+    // "Soul Reaver" -> "Mind Eater" (Canını değil, akıl sağlığını yiyor)
+    {"Void Horizon", "Mind Eater",              300, 53,  22, 195, 29, 110},
+    // "Nightmare Manifestation" -> "Eldritch Horror" (Klasik kozmik dehşet)
+    {"Void Horizon", "That Which Waits",         350, 55,  25, 220, 30, 115},
+    // BOSS: "Ancient Spirit Lord" -> "The Unspeakable" (İsimsiz Son)
+    {"Void Horizon", "The Unspeakable",         400, 57,  28, 250, 32, 120}
 };
 
 const char* retreatTexts[] = {
@@ -418,7 +449,7 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
         
         printf("\n    You were bested by the %s.\n", enemyPool[enemyIdx].name);
         
-		if(strcmp(enemyPool[enemyIdx].place, "Northern Forests") == 0)
+		if(strcmp(enemyPool[enemyIdx].place, "The Silent Woods") == 0)
 		{
 			printf("    Death is a cold companion in the %s...\n", enemyPool[enemyIdx].place);
 		}
@@ -650,17 +681,17 @@ int getRandomEnemyIndex(int playerLevel)
 
 	if (playerLevel <= 10)
 	{
-		startIdx = NORTHERN_FORESTS_START;
-		endIdx = NORTHERN_FORESTS_END;
+		startIdx = SILENT_WOODS_START;
+		endIdx = SILENT_WOODS_END;
 	}
 	else if (playerLevel <= 20)
 	{
-		startIdx = ENCHANTED_GROVES_START;
-		endIdx = ENCHANTED_GROVES_END;
+		startIdx = ROTTING_GLADE_START;
+		endIdx = ROTTING_GLADE_END;
 	}
 	else
 	{
-		startIdx = SPIRIT_REALM_START;
+		startIdx = VOID_HORIZON_START;
 		endIdx = 31;
 	}
 
@@ -708,7 +739,7 @@ void cursorControlWar()
 				clearWarLog();
 				int selectedEnemyIdx = getRandomEnemyIndex(kheshig.level);
 				char startMsg[150];
-    			sprintf(startMsg, "A wild %s appeared in the %s!\n  Battle started in %s!\n",enemyPool[selectedEnemyIdx].name, enemyPool[selectedEnemyIdx].place,enemyPool[selectedEnemyIdx].place);
+    			sprintf(startMsg, "A wild %s appeared in the %s!\n",enemyPool[selectedEnemyIdx].name, enemyPool[selectedEnemyIdx].place);
 				appendWarLog(startMsg);
 				warPanel(kheshig.activeHealth, enemyPool[selectedEnemyIdx].health, selectedEnemyIdx);
 			}
