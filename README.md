@@ -29,8 +29,8 @@ Bloodthirsty Kheshig is a turn-based arena combat game developed in C, running n
   - 🏪 Market Menu - Buy potions, damage scrolls, and armor
   - 🔨 Blacksmith Menu - Upgrade weapons and armor
   - 🎰 Gambling Menu - Risk/reward mini-games
-  - 🏨 The Inn - Rest and restore health
-- **Keyboard-based Navigation** - W/S for vertical movement, A/D for horizontal movement
+  - 🏨 The Inn - Rest, gamble, and work when broke
+- **Keyboard-based Navigation** - W/S for vertical menu navigation, F to select, Q to go back
 - **Console UI** - Colorized text interface with ANSI escape codes and health bars
 
 ---
@@ -115,10 +115,9 @@ make rebuild        # Clean and recompile
 ### Controls
 | Key | Action |
 |-----|--------|
-| **W** / **S** | Move up/down between zones |
-| **A** / **D** | Move left/right between zones (in menus) |
-| **F** | Select/Enter current zone |
-| **Q** | Quit/Go back to main menu |
+| **W** / **S** | Move up/down in menus and zones |
+| **F** | Select/Enter current option |
+| **Q** | Quit/Go back to previous menu |
 
 ### Main Menu
 - View your character stats (HP, Level, XP, Gold, Attack, Defense, Day/Time) at the top
@@ -136,9 +135,12 @@ make rebuild        # Clean and recompile
 ## 🗺️ Game Zones
 
 ### ⚔️ War Menu
-Enter combat encounters across three difficulty zones: Northern Forests, Hell, and Glacial Mountains. Defeat enemies to earn XP and Gold.
+Enter combat encounters across three difficulty zones with scaling difficulty. Defeat enemies to earn XP and Gold.
+- **Northern Forests** (Level 0-10): Early-game zone with balanced difficulty (~60-80% win chance)
+- **Enchanted Groves** (Level 11-20): Mid-game zone requiring gear upgrades (~40-50% win chance)
+- **Spirit Realm** (Level 21+): Late-game zone for experienced warriors (~20-30% win chance)
 - **Current Status**: ✅ Fully Functional turn-based combat system
-- **Features**: Enemy AI, multiple difficulty levels, dynamic combat log, experience and gold rewards
+- **Features**: Balanced enemy AI, zone-based difficulty scaling, dynamic combat log, experience and gold rewards
 
 ### 🏪 Market Menu
 Buy health potions, damage scrolls, and armor to strengthen your character.
@@ -152,22 +154,31 @@ Upgrade your weapons and armor with random stat boosts.
 
 ### 🎰 Gambling Menu
 Test your luck with gambling games to increase or lose gold.
-- **Current Status**: ⏳ In Development
-- **Planned**: Coin Flip, Dice Roll, Underground Arena mini-games
+- **Current Status**: ✅ Fully Functional
+- **Features**: Coin Flip (50% chance, 30G bet), Dice Roll (50% chance, 50G bet), High Stakes (30% chance, 100G bet)
+
+### 🏨 The Inn
+Rest, gamble, and earn money when desperate.
+- **Rest** - (10G) Restore 30 HP (1 time period)
+- **Gamble** - Play mini-games for risk/reward opportunities
+- **Work at Inn** - Available when you have 0 gold, earn 15G per period (1 time period)
+- **Current Status**: ✅ Fully Functional
+- **Features**: Emergency income when broke, gambling opportunities, health restoration
 
 ---
 
 ## 🚀 Development Status
 
-### Current Version: v0.2.0 (Pre-Alpha)
-- ✅ Menu Navigation with 5 zones
-- ✅ Combat Mechanics (Attacks, Defense, Enemy AI with scaling difficulty)
+### Current Version: v0.3.0 (Pre-Alpha)
+- ✅ Menu Navigation with 5 zones (unified W/S vertical navigation)
+- ✅ Combat Mechanics (Attacks, Defense, balanced Enemy AI)
+- ✅ Zone-Based Enemy Progression (Northern Forests, Enchanted Groves, Spirit Realm)
 - ✅ Save System (Save/Load)
-- ✅ Colored UI & Dynamic Battle Log
+- ✅ Colored UI & Dynamic Battle Log with health bars
 - ✅ Market Menu (Buy/Sell items)
-- ✅ Blacksmith Menu (Equipment upgrades)
-- ✅ The Inn (Rest and restore health)
-- ⏳ Gambling Menu (Planned)
+- ✅ Blacksmith Menu (Equipment upgrades with RNG)
+- ✅ The Inn (Rest, Gamble, or Work when broke)
+- ✅ Gambling Menu (Coin Flip, Dice Roll, High Stakes)
 
 ### Status: **Playable Pre-Alpha**
 Core game mechanics are functional. This is an early-stage project for educational purposes.
@@ -177,25 +188,28 @@ Core game mechanics are functional. This is an early-stage project for education
 ## 📋 Roadmap
 
 ### v0.2.0 - Core Systems & Persistence (Completed)
-- [x] Combat Mechanics: Functional turn-based battle system.
-- [x] Save System: Persisting character data to disk using .dat format.
-- [x] Persistence: Loading character progress between sessions.
-- [x] Dynamic UI: Live health bars and scrolling battle logs.
+- [x] Combat Mechanics: Functional turn-based battle system
+- [x] Save System: Persisting character data to disk using .dat format
+- [x] Persistence: Loading character progress between sessions
+- [x] Dynamic UI: Live health bars and scrolling battle logs
 
 ### v0.3.0 - Combat & AI (The "Tactical" Update)
-- [ ] Implement functional Market Menu mechanics
-- [ ] Implement functional Blacksmith Menu mechanics
-- [ ] Implement functional Gambling (Mini-Game) mechanics
-- [ ] Stamina System: Attacks will consume energy, requiring strategic pauses.
-- [ ] Loot Drop: Enemies will have a chance to drop rare items (Stat boosters).
-- [ ] Dynamic XP & Gold: Rewards will vary based on RNG (Random Number Generation).
-- [ ] Level Scaling: XP required for next level will increase exponentially.
-- [ ] Balancing: Refined damage/defense formulas for fairer fights.
-- [ ] Expanded Market: Introduction of XP Potions and special scrolls.
+- [x] Implement functional Market Menu mechanics
+- [x] Implement functional Blacksmith Menu mechanics
+- [x] Implement functional Gambling (Mini-Game) mechanics
+- [x] Balanced Enemy AI: Scaled attack/defense values for fair gameplay
+- [x] Zone-Based Difficulty: Northern Forests → Enchanted Groves → Spirit Realm progression
+- [x] Work at Inn: Earn gold when broke without combat
+- [x] Unified Menu Navigation: All menus use W/S for selection
+- [x] Level Scaling: XP required for next level will increase exponentially
+- [ ] Stamina System: Attacks will consume energy, requiring strategic pauses
+- [ ] Loot Drop: Enemies will have a chance to drop rare items (Stat boosters)
+- [ ] Dynamic XP & Gold: Rewards will vary based on RNG (Random Number Generation)
+- [ ] Expanded Market: Introduction of XP Potions and special scrolls
 
 ### v0.4.0+ - Atmosphere & Story
-- [ ] ANSI Art Storytelling: Visual narrative using colored ASCII art for regions and bosses.
-- [ ] Advanced Enemy AI: Enemies may flee or heal when low on health.
+- [ ] ANSI Art Storytelling: Visual narrative using colored ASCII art for regions and bosses
+- [ ] Advanced Enemy AI: Enemies may flee or heal when low on health
 - [ ] Multiple character classes (Warrior, Archer, Shaman)
 - [ ] Quest system
 - [ ] "Endless Mode" (Survival)
@@ -285,5 +299,5 @@ Created: January 2026
 
 ---
 
-**Last Updated**: February 4, 2026  
-**Current Version**: v0.2.0 (Pre-Alpha)
+**Last Updated**: February 12, 2026  
+**Current Version**: v0.3.0 (Pre-Alpha)
