@@ -5,7 +5,7 @@
 #include <time.h>
 #include <string.h>
 #include <direct.h>
-#include <sys/stat.h>
+#include <errno.h>
 
 #include "../include/INNMENU_.h"
 

@@ -5,7 +5,7 @@
 #include <time.h>
 #include <string.h>
 #include <direct.h>
-#include <sys/stat.h>
+#include <errno.h>
 
 #include "include/WARMENU_.h"
 #include "include/MARKETMENU_.h"
@@ -76,19 +76,35 @@ int checkSave()
 
 void gameSave() 
 {
-    struct stat st = {0};
-    if (stat("data", &st) == -1) {
-        _mkdir("data");
+    // 1. ADIM: Klasör oluşturmayı dene
+    // _mkdir 0 dönerse başarılı, -1 dönerse hata var demektir.
+    if (_mkdir("data") == -1) 
+    {
+        // Eğer hata kodu EEXIST (File Exists) değilse, gerçek bir sorun var demektir.
+        if (errno != EEXIST) 
+        {
+            printf("\n[HATA] 'data' klasoru olusturulamadi! Hata Kodu: %d\n", errno);
+            printf("Lutfen oyunu yonetici olarak calistirin veya klasoru elle olusturun.\n");
+        }
+        // EEXIST hatası aldıysak sorun yok, klasör zaten var demektir. Devam et.
     }
 
+    // 2. ADIM: Dosyayı yaz
     FILE *fp = fopen("data/save.dat","wb");
-    if (fp != NULL) {
+    if (fp != NULL) 
+    {
         fwrite(&kheshig, sizeof(struct Player), 1, fp);
         fclose(fp);
     }
-    else {
-        printf("\nCritical Error: Could not create log file! Check folder permissions.\n");
-        getch();
+    else 
+    {
+        printf("\n[KRITIK HATA] Kayit dosyasi (data/save.dat) acilamadi!\n");
+        // Hatanın nerede olduğunu anlamak için o anki çalışma dizinini yazdıralım:
+        char cwd[1024];
+        if (_getcwd(cwd, sizeof(cwd)) != NULL)
+            printf("Su anki calisma dizini: %s\n", cwd);
+            
+        getch(); // Kullanıcı hatayı okusun
     }
 }
 
