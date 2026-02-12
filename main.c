@@ -76,20 +76,15 @@ int checkSave()
 
 void gameSave() 
 {
-    // 1. ADIM: Klasör oluşturmayı dene
-    // _mkdir 0 dönerse başarılı, -1 dönerse hata var demektir.
     if (_mkdir("data") == -1) 
     {
-        // Eğer hata kodu EEXIST (File Exists) değilse, gerçek bir sorun var demektir.
         if (errno != EEXIST) 
         {
-            printf("\n[HATA] 'data' klasoru olusturulamadi! Hata Kodu: %d\n", errno);
-            printf("Lutfen oyunu yonetici olarak calistirin veya klasoru elle olusturun.\n");
+            printf("\n[ERROR] The ‘data’ folder could not be created! Error Code: %d\n", errno);
+            printf("Please run the game as an administrator or create the folder manually.\n");
         }
-        // EEXIST hatası aldıysak sorun yok, klasör zaten var demektir. Devam et.
     }
-
-    // 2. ADIM: Dosyayı yaz
+	system("if not exist data mkdir data");
     FILE *fp = fopen("data/save.dat","wb");
     if (fp != NULL) 
     {
@@ -98,13 +93,12 @@ void gameSave()
     }
     else 
     {
-        printf("\n[KRITIK HATA] Kayit dosyasi (data/save.dat) acilamadi!\n");
-        // Hatanın nerede olduğunu anlamak için o anki çalışma dizinini yazdıralım:
+        printf("\n[CRITICAL ERROR] The save file (data/save.dat) could not be opened!\n");
         char cwd[1024];
         if (_getcwd(cwd, sizeof(cwd)) != NULL)
-            printf("Su anki calisma dizini: %s\n", cwd);
+            printf("Current working directory: %s\n", cwd);
             
-        getch(); // Kullanıcı hatayı okusun
+        getch();
     }
 }
 
