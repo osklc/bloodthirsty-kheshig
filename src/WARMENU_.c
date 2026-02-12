@@ -353,12 +353,24 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
         int idx = rand() % victoryCount;
         printf("    %s\n",victoryTexts[idx]);
         
-        printf("\n    \033[33m[LOOT COLLECTED]\033[0m\n");
-		printf("    + %d Gold Coins\n", enemyPool[enemyIdx].goldReward);
-		printf("    + %d Xp Earned\n", enemyPool[enemyIdx].xpReward);
         
-		kheshig.gold += enemyPool[enemyIdx].goldReward;
-		kheshig.xp += enemyPool[enemyIdx].xpReward;
+		int randEndGold = enemyPool[enemyIdx].goldReward * 0.8;
+		int randStartGold = enemyPool[enemyIdx].goldReward * 1.2;
+		int randGold = rand() % randStartGold + randEndGold; 
+
+		kheshig.gold += randGold;
+
+		printf("\n    \033[33m[LOOT COLLECTED]\033[0m\n");
+		printf("    + %d Gold Coins\n", randGold);
+
+		int randEndXp = enemyPool[enemyIdx].xpReward * 0.8;
+		int randStartXp = enemyPool[enemyIdx].xpReward * 1.2;
+		int randXp = rand() % randStartXp + randEndXp; 
+
+		kheshig.xp += randXp;
+
+		printf("    + %d Xp Earned\n", enemyPool[enemyIdx].xpReward);
+
 		kheshig.activeHealth = pHP;
 		xpLevelCalc();
 		gameSave();
@@ -410,6 +422,12 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
 		{
 			printf("    Death is a cold companion in the %s...\n", enemyPool[enemyIdx].place);
 		}
+		/*
+		else if(strcmp(enemyPool[enemyIdx].place, "sdasdsadadasdsadsad") == 0)
+		{
+			printf("    Death is a cold companion in the %s...\n", enemyPool[enemyIdx].place);
+		}
+		*/
 
 		int defeatCount = sizeof(defeatTexts) / sizeof(defeatTexts[0]);
         int idx = rand() % defeatCount;
