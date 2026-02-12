@@ -203,8 +203,8 @@ Core game mechanics are functional. This is an early-stage project for education
 - [x] Unified Menu Navigation: All menus use W/S for selection
 - [x] Level Scaling: XP required for next level will increase exponentially
 - [x] Stamina System: Attacks will consume energy, requiring strategic pauses
+- [x] Dynamic XP & Gold: Rewards will vary based on RNG (Random Number Generation)
 - [ ] Loot Drop: Enemies will have a chance to drop rare items (Stat boosters)
-- [ ] Dynamic XP & Gold: Rewards will vary based on RNG (Random Number Generation)
 - [ ] Expanded Market: Introduction of XP Potions and special scrolls
 
 ### v0.4.0+ - Atmosphere & Story (The "Possession" Update)
@@ -305,5 +305,5 @@ Created: January 2026
 
 ---
 
-**Last Updated**: February 12, 2026  
+**Last Updated**: February 13, 2026  
 **Current Version**: v0.3.0 (Pre-Alpha)
