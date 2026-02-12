@@ -202,7 +202,7 @@ Core game mechanics are functional. This is an early-stage project for education
 - [x] Work at Inn: Earn gold when broke without combat
 - [x] Unified Menu Navigation: All menus use W/S for selection
 - [x] Level Scaling: XP required for next level will increase exponentially
-- [ ] Stamina System: Attacks will consume energy, requiring strategic pauses
+- [x] Stamina System: Attacks will consume energy, requiring strategic pauses
 - [ ] Loot Drop: Enemies will have a chance to drop rare items (Stat boosters)
 - [ ] Dynamic XP & Gold: Rewards will vary based on RNG (Random Number Generation)
 - [ ] Expanded Market: Introduction of XP Potions and special scrolls
