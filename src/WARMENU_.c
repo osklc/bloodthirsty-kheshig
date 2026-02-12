@@ -12,45 +12,64 @@
 
 char boardWar[4][20] = {"Start War","War Training"};
 int columnSize = 2;
+int listRowWar = 0;
 char places[3][20] = {"Northern Forests", "Hell", "Glacial Mountains"};
 
-char viewLineWar[] = "========================================================";
+char viewLineWar[] = "===========================================================";
 
 char warLogs[MAX_VISIBLE_LOGS][WAR_LINE_SIZE];
 int currentLogCount = 0;
 
 Enemy enemyPool[] = {
-	//IS NOT BALANCED IN PROCESS (numbers are representation)
-    // --- NORTHERN FORESTS (Level 1 - 10)
-    {"Northern Forests", "Shadow-Paw Warg",     45,  12,  2,  15, 1, 0, 50},
-    {"Northern Forests", "Forest Outcast",      60,  15,  4,  25, 1, 3, 12},
-    {"Northern Forests", "Blind Ravager",       85,  22,  8,  45, 2, 6, 15},
-    {"Northern Forests", "Moss-Skin Troll",     150, 20,  15, 80, 3, 9, 20},
+    // --- NORTHERN FORESTS (Level 0-9) - Early game, mostly winnable
+    {"Northern Forests", "Grey Wolf",           35,  12,  1,  25, 0,  35},
+    {"Northern Forests", "Wild Boar",           45,  13,  2,  30, 1,  38},
+    {"Northern Forests", "Rabid Fox",           38,  14,  2,  28, 2,  40},
+    {"Northern Forests", "Forest Bandit",       55,  15,  3,  35, 3,  42},
+    {"Northern Forests", "Brown Bear",          75,  16,  4,  40, 4,  45},
+    {"Northern Forests", "Outlaw Archer",       60,  17,  3,  38, 5,  43},
+    {"Northern Forests", "Feral Lynx",          50,  18,  2,  36, 5,  41},
+    {"Northern Forests", "Mountain Lion",       80,  19,  5,  42, 6,  46},
+    {"Northern Forests", "Bandit Chief",        100, 20,  6,  50, 7,  48},
+    {"Northern Forests", "Timber Wolf Pack",    110, 22,  7,  55, 9,  50},
 
-    // --- HELL (Level 10 - 20)
-    {"Hell", "Soul Burner Imp",                 100, 35,  10, 100, 2, 10, 20},
-    {"Hell", "Inferno Reaver",                  130, 42,  15, 150, 3, 13, 22},
-    {"Hell", "Cursed Soul Eater",               160, 48,  20, 200, 4, 16, 25},
-    {"Hell", "Molten Behemoth",                 250, 55,  35, 350, 5, 19, 28},
+    // --- ENCHANTED GROVES (Level 10-19) - Need some gear upgrades
+    {"Enchanted Groves", "Glowing Stag",        120, 24,  6,  65, 10, 60},
+    {"Enchanted Groves", "Thornback Badger",    130, 26,  8,  75, 11, 65},
+    {"Enchanted Groves", "Whispering Owl",      110, 27,  7,  70, 12, 63},
+    {"Enchanted Groves", "Moonlit Fox",         125, 28,  7,  75, 13, 65},
+    {"Enchanted Groves", "Ancient Treant",      160, 30,  10, 90, 14, 70},
+    {"Enchanted Groves", "Spore-Touched Bear",  145, 31,  9,  85, 15, 68},
+    {"Enchanted Groves", "Vine Strangler",      135, 32,  9,  80, 16, 67},
+    {"Enchanted Groves", "Fae-Touched Wolf",    130, 33,  8,  82, 17, 69},
+    {"Enchanted Groves", "Crystal Beetle",      115, 35,  12, 78, 16, 66},
+    {"Enchanted Groves", "Elder Dryad",         150, 38,  14, 105, 19, 74},
 
-    // --- GLACIAL MOUNTAINS (Level 20 - 30+)
-    {"Glacial Mountains", "Snow Stalker Drake", 200, 60,  25, 400, 4, 20, 30},
-    {"Glacial Mountains", "Glacier Wraith",     220, 65,  30, 500, 4, 23, 33},
-    {"Glacial Mountains", "Ice Clad Berserker", 280, 75,  40, 650, 5, 26, 38},
-    {"Glacial Mountains", "Ice Golem",          450, 70,  60, 900, 6, 30, 42}
+    // --- SPIRIT REALM (Level 20-32) - Dangerous, require solid upgrades
+    {"Spirit Realm", "Lost Soul",               180, 40,  12, 120, 20, 85},
+    {"Spirit Realm", "Phantom Hunter",          200, 42,  14, 135, 22, 90},
+    {"Spirit Realm", "Ethereal Wisp",           165, 43,  11, 125, 21, 88},
+    {"Spirit Realm", "Banshee Warden",          220, 45,  16, 150, 24, 95},
+    {"Spirit Realm", "Spectral Knight",         250, 47,  18, 165, 26, 100},
+    {"Spirit Realm", "Void Stalker",            230, 48,  16, 160, 25, 98},
+    {"Spirit Realm", "Ancestral Guardian",      280, 50,  20, 180, 28, 105},
+    {"Spirit Realm", "Shadow Wraith",           210, 51,  15, 155, 27, 102},
+    {"Spirit Realm", "Soul Reaver",             300, 53,  22, 195, 29, 110},
+    {"Spirit Realm", "Nightmare Manifestation", 350, 55,  25, 220, 30, 115},
+    {"Spirit Realm", "Ancient Spirit Lord",     400, 57,  28, 250, 32, 120}
 };
 
 const char* retreatTexts[] = {
     "You chose survival over honor.",
 	"The shadows were kinder to you than your own steel today.",
 	"The Eternal Sky frowns upon your retreat, but your breath remains.",
-	"You fled like a wounded dog—alive, but broken.",
+	"You fled like a wounded dog alive, but broken.",
 	"Coward's breath is sweeter than a warrior's death, is it not?",
 	"Your ancestors spit at the mention of your name tonight.",
 	"The crows will mock your retreat in their cawing.",
 	"You chose the path of shame over the warrior's end.",
 	"Your legs carried you faster than your courage could.",
-	"The steppe remembers those who run—and judges them.",
+	"The steppe remembers those who run and judges them.",
 	"Survival tastes of ash when honor is the price."
 };
 
@@ -62,7 +81,7 @@ const char* victoryTexts[] = {
 	"You stand victorious amidst the carnage.",
 	"Another soul rides to the ancestors on your steel.",
 	"The ravens gather; your enemy feeds them well.",
-	"Swift as the wolf, fierce as the eagle—victory is yours!",
+	"Swift as the wolf, fierce as the eagle victory is yours!",
 	"Your foe's courage broke before your blade did.",
 	"The steppe remembers this kill.",
 	"Blood and glory the old way prevails!",
@@ -76,7 +95,7 @@ const char* defeatTexts[] = {
     "The crows gather for a feast you did not intend to provide.",
 	"The steppe claims another forgotten warrior.",
 	"Your ancestors turn their backs in silence.",
-	"The Eternal Sky saw your last breath—and turned away.",
+	"The Eternal Sky saw your last breath-and turned away.",
 	"You rode into legend, but death rode faster.",
 	"The wolves will scatter your bones by morning.",
 	"Your story ends here, unsung and unremembered.",
@@ -195,7 +214,13 @@ void warPanel(int currentHP, int currentEnemyHP, int enemyIdx)
 		}
 	}
 	printf("]");
-	printf("                 [");
+
+	for(int j=0;j<32-strlen(choicedEnemiesName);j++)
+	{
+		printf(" ");
+	}
+
+	printf("[");
 
 	int d = 0;
 	float enemyHpRatio = (float)currentEnemyHP / enemyPool[enemyIdx].health;
@@ -252,7 +277,6 @@ void escapeWar(int enemyIdx)
 		printf("                      \033[33m\033[1m<<< KHESHIG RETREATED >>>\033[0m\n");
         printf("%s\n", viewLineEscape);
 		advanceTimePeriod(1);
-		advanceTime();
 
 		int retreatCount = sizeof(retreatTexts) / sizeof(retreatTexts[0]);
         int idx = rand() % retreatCount;
@@ -511,25 +535,23 @@ void cursorControlWar()
 		system("cls");
 		playerStats("WAR MENU", 8, sizeof(viewLineWar), viewLineWar);
 		PrintBoardWar();
-		//printf("\nActive Cell: [%d , %d]", row, column); // For Debug
-		printf("%s",viewLineWar);
-		printf("\n[A-D] Move  |  [F] Select  |  [Q] Back to main menu\n");
+		printf("[W-S] Move  |  [F] Select  |  [Q] Back to main menu\n");
 		printf("%s\n",viewLineWar);
 		selectedDirection = getch();
 		
-        if(selectedDirection == 'A' || selectedDirection == 'a' || selectedDirection == 75)
-        {
-            column--;
-            if(column < 0) column = columnSize-1;
-        }
-        else if(selectedDirection == 'D' || selectedDirection == 'd' || selectedDirection == 77)
-        {
-            column++;
-            if(column > columnSize-1) column = 0;
-        }
+		if(selectedDirection == 'W' || selectedDirection == 'w' || selectedDirection == 72)
+		{
+			listRowWar--;
+			if(listRowWar < 0) listRowWar = columnSize-1;
+		}
+		else if(selectedDirection == 'S' || selectedDirection == 's' || selectedDirection == 80)
+		{
+			listRowWar++;
+			if(listRowWar > columnSize-1) listRowWar = 0;
+		}
         else if(selectedDirection == 'F' || selectedDirection == 'f')
         {
-        	if(column==0)
+			if(listRowWar==0)
         	{
 				clearWarLog();
 				int selectedEnemyIdx = getRandomEnemyIndex(kheshig.level);
@@ -538,7 +560,7 @@ void cursorControlWar()
 				appendWarLog(startMsg);
 				warPanel(kheshig.activeHealth, enemyPool[selectedEnemyIdx].health, selectedEnemyIdx);
 			}
-			else if(column==1)
+			else if(listRowWar==1)
 			{
 				system("cls");
 				printf("Training mode coming soon...");
@@ -548,7 +570,7 @@ void cursorControlWar()
 		}
 		else if(selectedDirection == 'Q' || selectedDirection == 'q')
         {
-			column=0;
+			listRowWar=0;
         	FirstIntroductionMenu();
 		}
 		else
@@ -561,49 +583,16 @@ void cursorControlWar()
 
 void PrintBoardWar()
 {
-	int i,j,m,n;
-	
-	for(i=0;i<1;i++)
+	for(int i=0;i<columnSize;i++)
 	{
-		/*for(m=0;m<columnSize;m++)
+		if(listRowWar==i)
 		{
-			printf(" ");
-			for(n=0;n<strlen(boardWar[m])+6;n++)
-			{
-				printf("\033[4m ");
-			}
+			printf("\033[32m%d.%s\033[0m\n", i+1, boardWar[i]);
 		}
-		printf("\033[0m\n");*/
-		for(m=0;m<columnSize;m++)
+		else
 		{
-			printf("|");
-			for(n=0;n<strlen(boardWar[m])+6;n++)
-			{
-				printf(" ");
-			}
+			printf("%d.%s\n", i+1, boardWar[i]);
 		}
-		printf("|\n");
-		for(j=0;j<columnSize;j++)
-		{
-			printf("|");
-			if(i==row && j== column)
-			{
-				printf("  \033[92m[%s]\033[0m  ",boardWar[j]);
-			}
-			else
-			{
-				printf("   %s   ",boardWar[j]);
-			}
-		}
-		printf("|\n");
-		for(m=0;m<columnSize;m++)
-		{
-			printf("|");
-			for(n=0;n<strlen(boardWar[m])+6;n++)
-			{
-				printf(" ");
-			}
-		}
-		printf("\033[0m|\n");
 	}
+	printf("%s\n", viewLineWar);
 }

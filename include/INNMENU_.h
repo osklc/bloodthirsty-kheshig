@@ -29,3 +29,4 @@ void cursorControlInn();
 void printInnList();
 void playGambling();
 void printGamblingList();
+void advanceTimePeriod(int time);

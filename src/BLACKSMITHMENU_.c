@@ -48,7 +48,7 @@ void cursorControlBlackSmith()
 				{
 					printf("\033[31mYou don't have enough gold!\033[0m");
 					printf("\n%s\n", viewLineBlackSmith);
-					printf("Press any key to return to the main menu.");
+					printf("Press any key to continue...");
 					printf("\n%s\n", viewLineBlackSmith);
 					getch();
 					FirstIntroductionMenu();
@@ -77,7 +77,7 @@ void cursorControlBlackSmith()
 				{
 					printf("\033[31mYou don't have enough gold!\033[0m");
 					printf("\n%s\n", viewLineBlackSmith);
-					printf("Press any key to return to the main menu.");
+					printf("Press any key to continue...");
 					printf("\n%s\n", viewLineBlackSmith);
 					getch();
 					FirstIntroductionMenu();

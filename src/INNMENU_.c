@@ -7,10 +7,10 @@
 
 #include "../include/INNMENU_.h"
 
-char boardInn[3][60] = {"Rest - 50G", "Gamble", "Continue"};
+char boardInn[3][60] = {"Rest(+25HP) - 5G (1 period passes)", "Work at Inn - Earn 5G (1 period passes)", "Gamble"};
 char boardGambling[3][60] = {"Coin Flip - Bet 30G (50%% win chance, x2 reward)", "Dice Roll - Bet 50G (50%% win chance, x2 reward)", "High Stakes - Bet 100G (30%% win chance, x5 reward)"};
 char viewLineInn[] = "========================================================";
-int innColumn = 0;
+int listRowInn = 0;
 int listRowGambling = 0;
 int rowSize = 3;
 
@@ -28,55 +28,63 @@ void cursorControlInn()
 		system("cls");
 		playerStats("THE INN", 7, sizeof(viewLineInn), viewLineInn);
 		printInnList();
-		printf("%s",viewLineInn);
-		printf("\n[A-D] Move  |  [F] Select  |  [Q] Back to main menu\n");
+		printf("[W-S] Move  |  [F] Select  |  [Q] Back to main menu\n");
 		printf("%s\n",viewLineInn);
 		selectedDirection = getch();
 		
-        if(selectedDirection == 'A' || selectedDirection == 'a' || selectedDirection == 75)
-        {
-            innColumn--;
-            if(innColumn < 0) innColumn = 2;
-        }
-        else if(selectedDirection == 'D' || selectedDirection == 'd' || selectedDirection == 77)
-        {
-            innColumn++;
-            if(innColumn > 2) innColumn = 0;
-        }
+		if(selectedDirection == 'W' || selectedDirection == 'w' || selectedDirection == 72)
+		{
+			listRowInn--;
+			if(listRowInn < 0) listRowInn = 2;
+		}
+		else if(selectedDirection == 'S' || selectedDirection == 's' || selectedDirection == 80)
+		{
+			listRowInn++;
+			if(listRowInn > 2) listRowInn = 0;
+		}
         else if(selectedDirection == 'F' || selectedDirection == 'f')
         {
-        	if(innColumn==0)
+			if(listRowInn==0)
         	{
-				if(kheshig.gold<50)
+				if(kheshig.gold<10)
 				{
 					printf("\033[31mYou don't have enough gold!\033[0m");
 					printf("\n%s\n", viewLineInn);
 					printf("Press any key to return to the main menu.");
 					printf("\n%s\n", viewLineInn);
 					getch();
-					FirstIntroductionMenu();
+					cursorControlInn();
 				}
-				kheshig.gold-=50;
-				kheshig.activeHealth+=50;
-				if(kheshig.activeHealth>kheshig.health)
+				else
 				{
-					kheshig.activeHealth=kheshig.health;
+					kheshig.gold-=5;
+					kheshig.activeHealth+=25;
+					if(kheshig.activeHealth>kheshig.health)
+					{
+						kheshig.activeHealth=kheshig.health;
+					}
+					advanceTimePeriod(1);
+					gameSave();
+					system("cls");
+					cursorControlInn();
 				}
+			}
+			else if(listRowInn==1)
+			{
+				kheshig.gold += 5;
+				advanceTimePeriod(1);
 				gameSave();
 				system("cls");
 				cursorControlInn();
 			}
-			else if(innColumn==1)
+			else if(listRowInn==2)
 			{
 				playGambling();
-			}
-			else if(innColumn==2)
-			{
-				FirstIntroductionMenu();
 			}
         }
         else if(selectedDirection == 'Q' || selectedDirection == 'q')
         {
+			listRowInn = 0;
             FirstIntroductionMenu();
         }
 	}
@@ -84,57 +92,23 @@ void cursorControlInn()
 
 void printInnList()
 {
-	int i, j, m, n;
-	int itemSize = 3;
-	
-	for(i=0;i<1;i++)
+	for(int i=0;i<3;i++)
 	{
-		/*for(m=0;m<itemSize;m++)
+		if(listRowInn==i)
 		{
-			printf(" ");
-			for(n=0;n<strlen(boardInn[m])+6;n++)
-			{
-				printf("\033[4m ");
-			}
+			printf("\033[32m%d.%s\033[0m\n", i+1, boardInn[i]);
 		}
-		printf("\033[0m\n");*/
-		for(m=0;m<itemSize;m++)
+		else
 		{
-			printf("|");
-			for(n=0;n<strlen(boardInn[m])+6;n++)
-			{
-				printf(" ");
-			}
+			printf("%d.%s\n", i+1, boardInn[i]);
 		}
-		printf("|\n");
-		for(j=0;j<itemSize;j++)
-		{
-			printf("|");
-			if(j== innColumn)
-			{
-				printf("  \033[92m[%s]\033[0m  ", boardInn[j]);
-			}
-			else
-			{
-				printf("   %s   ", boardInn[j]);
-			}
-		}
-		printf("|\n");
-		for(m=0;m<itemSize;m++)
-		{
-			printf("|");
-			for(n=0;n<strlen(boardInn[m])+6;n++)
-			{
-				printf(" ");
-			}
-		}
-		printf("\033[0m|\n");
 	}
+	printf("%s\n", viewLineInn);
 }
 
 void noGoldGambling()
 {
-	printf("\033[31mYou don't have enough gold!\033[0m");
+	printf("\n\033[31mYou don't have enough gold!\033[0m");
 	printf("\n%s\n", viewLineInn);
 	printf("Press any key to continue...");
 	printf("\n%s\n", viewLineInn);
@@ -149,7 +123,7 @@ void playGambling()
 	{
 		system("cls");
 		printf("%s\n", viewLineInn);
-		printf("\033[96m\033[3m                         GAMBLING\033[0m\n");
+		printf("\033[33m                         GAMBLING\033[0m\n");
 		printf("%s\n", viewLineInn);
 		printf("\033[33m\033[1mYour Gold:\033[0m %d\n\n", kheshig.gold);
 		printGamblingList();
@@ -175,7 +149,7 @@ void playGambling()
 			{
 				if(kheshig.gold < 30)
 				{
-					printf("\033[31mNot enough gold!\033[0m\n");
+					printf("\n\033[31mNot enough gold!\033[0m\n");
 					printf("Press any key to continue...\n");
 					getch();
 					playGambling();
@@ -213,7 +187,7 @@ void playGambling()
 			{
 				if(kheshig.gold < 50)
 				{
-					printf("\033[31mNot enough gold!\033[0m\n");
+					printf("\n\033[31mNot enough gold!\033[0m\n");
 					printf("Press any key to continue...\n");
 					getch();
 					playGambling();
@@ -252,7 +226,7 @@ void playGambling()
 			{
 				if(kheshig.gold < 100)
 				{
-					printf("\033[31mNot enough gold!\033[0m\n");
+					printf("\n\033[31mNot enough gold!\033[0m\n");
 					printf("Press any key to continue...\n");
 					getch();
 					playGambling();

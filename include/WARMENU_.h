@@ -26,7 +26,6 @@ typedef struct Enemy{
     int attack;
     int defense;
     int goldReward;
-    int difficulty;
     int minLevel;
     int xpReward;
 }Enemy;

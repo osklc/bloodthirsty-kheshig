@@ -14,7 +14,7 @@ int row=0;
 int column=0;
 char boardMain[4][20] = {"War","Market","Blacksmith", "The Inn"};
 
-char viewLine[] = "========================================================";
+char viewLine[] = "=======================================================";
 
 struct Player kheshig;
 
@@ -33,12 +33,10 @@ int main()
 	srand(time(NULL));
 	hideCursor();
 	gotoxy(0,0);
-	printf("\033[31m\033[3mBLOODTHIRSTY KHESHIG\033[0m\n");
-	//Sleep(1000);	
+	kheshig.gold = 100;
 	
 	if (checkSave() == 0)
 	{
-		//printf("New game");
 
 		kheshig.attack=10;
 		kheshig.defense=10;
@@ -74,11 +72,8 @@ void gameSave()
     if (fp != NULL) {
         fwrite(&kheshig, sizeof(struct Player), 1, fp);
         fclose(fp);
-		//Sleep(1000);
-        //printf(">> Game Saved <<\n");
     }
 	else {
-		//Sleep(1000);
         //printf("ERROR: Save file cant open!\n");
     }
 }
@@ -238,6 +233,7 @@ void advanceTimePeriod(int time)
 	{
 		kheshig.currentTimePeriod++;
 	}
+	advanceTime();
 }
 
 void advanceTime()
@@ -267,16 +263,16 @@ void playerStats(char menuName[], int menuNameSize, int viewLineSize, char *view
 	if(strcmp(menuName, "MAIN MENU") == 0) {
 		menuColor = "\033[94m";
 	} else if(strcmp(menuName, "WAR MENU") == 0) {
-		menuColor = "\033[91m";
+		menuColor = "\033[31m";
 	} else if(strcmp(menuName, "MARKET MENU") == 0) {
 		menuColor = "\033[95m";
 	} else if(strcmp(menuName, "BLACKSMITH MENU") == 0) {
-		menuColor = "\033[93m";
+		menuColor = "\033[33m";
 	} else if(strcmp(menuName, "THE INN") == 0) {
-		menuColor = "\033[96m";
+		menuColor = "\033[36m";
 	}
 	
-	printf("%s\033[3m%s\033[0m", menuColor, menuName);
+	printf("%s%s\033[0m", menuColor, menuName);
 	printf("\n%s\n", viewLineVariable);
 	printf("\033[91mHP:\033[0m %d/%d ",kheshig.activeHealth ,kheshig.health);
 	
@@ -329,7 +325,6 @@ void cursorControl()
 		system("cls");
 		playerStats("MAIN MENU", 9, sizeof(viewLine), viewLine);
 		PrintBoard();
-		//printf("\nActive Cell: [%d , %d]", row, column); // For Debug
 		printf("%s",viewLine);
 		printf("\n[A-D] Move  |  [F] Select  |  [Q] Quit\n");
 		printf("%s\n",viewLine);
@@ -374,14 +369,11 @@ void cursorControl()
 		}
 		else if(selectedDirection == 'Q' || selectedDirection == 'q')
         {
-        	//printf("\nProgram is closed.");
-        	//Sleep(200);
         	break;
 		}
 		else
 		{
-			//printf("\n\033[3m\033[31mERROR:\033[0m %c is not a valid value. Please enter valid input!", selectedDirection);
-			//Sleep(1000);
+
 		}
         
 	}
@@ -394,15 +386,6 @@ void PrintBoard()
 	
 	for(i=0;i<1;i++)
 	{
-		/*for(m=0;m<columnSize;m++)
-		{
-			printf(" ");
-			for(n=0;n<strlen(boardMain[m])+6;n++)
-			{
-				printf("\033[4m ");
-			}
-		}
-		printf("\033[0m\n");*/
 		for(m=0;m<columnSize;m++)
 		{
 			printf("|");

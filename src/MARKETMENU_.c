@@ -6,7 +6,7 @@
 
 #include "../include/MARKETMENU_.h"
 
-char boardMarket[4][40] = {"Buy Health Potion(HEALTH+50) - 20G","Buy Damage Scroll(ATK+3) - 120G","Buy ARMOR (DEF+3) - 120G","Sell Items"};
+char boardMarket[4][40] = {"Buy Health Potion(+50H) - 20G","Buy Damage Scroll(+3ATK) - 50G","Buy ARMOR (+3DEF) - 50G","Sell Items"};
 
 char viewLineMarket[] = "========================================================";
 
@@ -70,11 +70,11 @@ void cursorControlMarket()
 			}
 			else if(listRow==1)
 			{
-				if(kheshig.gold<120)
+				if(kheshig.gold<50)
 				{
 					noGoldMarket();
 				}
-				kheshig.gold-=120;
+				kheshig.gold-=50;
 				kheshig.attack+=3;
 				gameSave();
 				system("cls");
@@ -82,11 +82,11 @@ void cursorControlMarket()
 			}
 			else if(listRow==2)
 			{
-				if(kheshig.gold<120)
+				if(kheshig.gold<50)
 				{
 					noGoldMarket();
 				}
-				kheshig.gold-=120;
+				kheshig.gold-=50;
 				kheshig.defense+=3;
 				gameSave();
 				system("cls");
