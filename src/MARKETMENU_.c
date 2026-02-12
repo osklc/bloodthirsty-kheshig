@@ -3,6 +3,8 @@
 #include <conio.h>
 #include <windows.h>
 #include <time.h>
+#include <direct.h>
+#include <sys/stat.h>
 
 #include "../include/MARKETMENU_.h"
 

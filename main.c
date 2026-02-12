@@ -4,6 +4,8 @@
 #include <windows.h>
 #include <time.h>
 #include <string.h>
+#include <direct.h>
+#include <sys/stat.h>
 
 #include "include/WARMENU_.h"
 #include "include/MARKETMENU_.h"
@@ -27,33 +29,37 @@ void cursorControl();
 int checkSave();
 void gameSave();
 void xpLevelCalc();
+void initNewGame();
 
 int main() 
 {
 	srand(time(NULL));
 	hideCursor();
 	gotoxy(0,0);
-	kheshig.gold = 100;
 	
 	if (checkSave() == 0)
 	{
-
-		kheshig.attack=10;
-		kheshig.defense=10;
-		kheshig.gold=0;
-		kheshig.level=0;
-		kheshig.health=100;
-		kheshig.activeHealth=100;
-		kheshig.activeStamina=100;
-   	 	kheshig.maxStamina=100;
-		kheshig.xp=0;
-		kheshig.currentDay=0;
-    	kheshig.loopCount=0;
-		kheshig.currentTimePeriod=0;
+		initNewGame();
 		gameSave();
 	}
 	FirstIntroductionMenu();
 	return 0;
+}
+
+void initNewGame() 
+{
+    kheshig.attack = 10;
+    kheshig.defense = 10;
+    kheshig.gold = 0;
+    kheshig.level = 0;
+    kheshig.health = 100;
+    kheshig.activeHealth = 100;
+    kheshig.activeStamina = 100;
+    kheshig.maxStamina = 100;
+    kheshig.xp = 0;
+    kheshig.currentDay = 1;
+    kheshig.loopCount = 0;
+    kheshig.currentTimePeriod = 0;
 }
 
 int checkSave()
@@ -70,13 +76,20 @@ int checkSave()
 
 void gameSave() 
 {
+    struct stat st = {0};
+    if (stat("data", &st) == -1) {
+        _mkdir("data");
+    }
+
     FILE *fp = fopen("data/save.dat","wb");
     if (fp != NULL) {
         fwrite(&kheshig, sizeof(struct Player), 1, fp);
         fclose(fp);
+        // printf("Oyun kaydedildi.\n"); // Test
     }
-	else {
-        //printf("ERROR: Save file cant open!\n");
+    else {
+        printf("\nCritical Error: Could not create log file! Check folder permissions.\n");
+        getch();
     }
 }
 
@@ -303,7 +316,7 @@ void playerStats(char menuName[], int menuNameSize, int viewLineSize, char *view
 	printf("\033[33m\033[1mGold:\033[0m %d\n",kheshig.gold);
 	printf("\033[95m\033[3mAttack:\033[0m %d\n",kheshig.attack);
 	printf("\033[33mDefense:\033[0m %d\n",kheshig.defense);
-	printf("\033[34mDay:\033[0m %d",kheshig.currentDay+1);
+	printf("\033[34mDay:\033[0m %d",kheshig.currentDay);
 	if(kheshig.currentTimePeriod == 0)
 	{
 		printf(" Morning");

@@ -4,6 +4,8 @@
 #include <windows.h>
 #include <time.h>
 #include <string.h>
+#include <direct.h>
+#include <sys/stat.h>
 
 #define WAR_LINE_SIZE 1024
 #define MAX_VISIBLE_LOGS 5

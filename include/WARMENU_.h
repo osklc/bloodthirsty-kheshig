@@ -4,6 +4,8 @@
 #include <windows.h>
 #include <time.h>
 #include <string.h>
+#include <direct.h>
+#include <sys/stat.h>
 
 typedef struct Player{
     int health;
