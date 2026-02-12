@@ -85,7 +85,6 @@ void gameSave()
     if (fp != NULL) {
         fwrite(&kheshig, sizeof(struct Player), 1, fp);
         fclose(fp);
-        // printf("Oyun kaydedildi.\n"); // Test
     }
     else {
         printf("\nCritical Error: Could not create log file! Check folder permissions.\n");
