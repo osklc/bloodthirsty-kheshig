@@ -8,6 +8,12 @@
 #define WAR_LINE_SIZE 1024
 #define MAX_VISIBLE_LOGS 5
 
+#define NORTHERN_FORESTS_START 0
+#define NORTHERN_FORESTS_END 9
+#define ENCHANTED_GROVES_START 10
+#define ENCHANTED_GROVES_END 19
+#define SPIRIT_REALM_START 20
+
 #include "../include/WARMENU_.h"
 
 char boardWar[4][20] = {"Start War","War Training"};
@@ -512,8 +518,25 @@ int getRandomEnemyIndex(int playerLevel)
 {
 	int validIndices[20];
 	int validCount = 0;
+	int startIdx, endIdx;
 
-	for (int i = 0; i < sizeof(enemyPool) / sizeof(Enemy); i++)
+	if (playerLevel <= 10)
+	{
+		startIdx = NORTHERN_FORESTS_START;
+		endIdx = NORTHERN_FORESTS_END;
+	}
+	else if (playerLevel <= 20)
+	{
+		startIdx = ENCHANTED_GROVES_START;
+		endIdx = ENCHANTED_GROVES_END;
+	}
+	else
+	{
+		startIdx = SPIRIT_REALM_START;
+		endIdx = 31;
+	}
+
+	for (int i = startIdx; i <= endIdx; i++)
 	{
 		if(playerLevel >= enemyPool[i].minLevel)
 		{
@@ -521,7 +544,8 @@ int getRandomEnemyIndex(int playerLevel)
 			validCount++;
 		}
 	}
-	if (validCount == 0) return 0;
+
+	if (validCount == 0) return startIdx;
 
 	return validIndices[rand() % validCount];
 }
@@ -575,7 +599,6 @@ void cursorControlWar()
 		}
 		else
 		{
-			//printf("\n\033[3m\033[31mERROR:\033[0m %c is not a valid value. Please enter valid input!", selectedDirection);
 		}
         
 	}

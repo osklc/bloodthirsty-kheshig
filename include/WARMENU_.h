@@ -58,3 +58,4 @@ void quickAttack(int pHP, int eHP, int enemyIdx);
 void normalAttack(int pHP, int eHP, int enemyIdx);
 void heavyAttack(int pHP, int eHP, int enemyIdx);
 void defense(int pHP, int eHP, int enemyIdx);
+int getRandomEnemyIndex(int playerLevel);
