@@ -345,7 +345,7 @@ void cursorControl()
 {
 	char selectedDirection = '\0';
 	
-	while(selectedDirection != 'F' && selectedDirection != 'f')
+	while(selectedDirection != 'F' && selectedDirection != 'f' && selectedDirection != 13 && selectedDirection != 'Q' && selectedDirection != 'q' && selectedDirection != 27)
 	{
 		system("cls");
 		playerStats("MAIN MENU", 9, sizeof(viewLine), viewLine);
@@ -365,7 +365,7 @@ void cursorControl()
             column++;
             if(column > 3) column = 0;
         }
-        else if(selectedDirection == 'F' || selectedDirection == 'f')
+        else if(selectedDirection == 'F' || selectedDirection == 'f' || selectedDirection == 13)
         {
         	if(column==0)
         	{
@@ -392,7 +392,7 @@ void cursorControl()
 				innMenu();
 			}
 		}
-		else if(selectedDirection == 'Q' || selectedDirection == 'q')
+		else if(selectedDirection == 'Q' || selectedDirection == 'q' || selectedDirection == 27)
         {
         	break;
 		}

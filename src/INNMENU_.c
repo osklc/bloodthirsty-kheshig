@@ -25,7 +25,7 @@ void cursorControlInn()
 {
 	char selectedDirection = '\0';
 	
-	while((selectedDirection != 'F' && selectedDirection != 'f') && (selectedDirection != 'Q' && selectedDirection != 'q'))
+	while(selectedDirection != 'F' && selectedDirection != 'f' && selectedDirection != 'Q' && selectedDirection != 'q' && selectedDirection != 13 && selectedDirection != 27)
 	{
 		system("cls");
 		playerStats("THE INN", 7, sizeof(viewLineInn), viewLineInn);
@@ -44,7 +44,7 @@ void cursorControlInn()
 			listRowInn++;
 			if(listRowInn > 2) listRowInn = 0;
 		}
-        else if(selectedDirection == 'F' || selectedDirection == 'f')
+        else if(selectedDirection == 'F' || selectedDirection == 'f' || selectedDirection == 13)
         {
 			if(listRowInn==0)
         	{
@@ -84,7 +84,7 @@ void cursorControlInn()
 				playGambling();
 			}
         }
-        else if(selectedDirection == 'Q' || selectedDirection == 'q')
+        else if(selectedDirection == 'Q' || selectedDirection == 'q' || selectedDirection == 27)
         {
 			listRowInn = 0;
             FirstIntroductionMenu();

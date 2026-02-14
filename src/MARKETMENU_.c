@@ -33,7 +33,7 @@ void cursorControlMarket()
 {
 	char selectedDirection = '\0';
 	
-	while((selectedDirection != 'F' && selectedDirection != 'f') && (selectedDirection != 'Q' && selectedDirection != 'q'))
+	while(selectedDirection != 'F' && selectedDirection != 'f' && selectedDirection != 'Q' && selectedDirection != 'q' && selectedDirection != 13 && selectedDirection != 27)
 	{
 		system("cls");
 		playerStats("MARKET MENU", 11, sizeof(viewLineMarket), viewLineMarket);
@@ -52,7 +52,7 @@ void cursorControlMarket()
             listRow++;
             if(listRow > 3) listRow = 0;
         }
-        else if(selectedDirection == 'F' || selectedDirection == 'f')
+        else if(selectedDirection == 'F' || selectedDirection == 'f' || selectedDirection == 13)
         {
         	if(listRow==0)
         	{
@@ -100,7 +100,7 @@ void cursorControlMarket()
 				marketMenu();
 			}
 		}
-		else if(selectedDirection == 'Q' || selectedDirection == 'q')
+		else if(selectedDirection == 'Q' || selectedDirection == 'q' || selectedDirection == 27)
         {
 			listRow=0;
         	FirstIntroductionMenu();

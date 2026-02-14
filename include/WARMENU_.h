@@ -32,6 +32,8 @@ typedef struct Enemy{
     int goldReward;
     int minLevel;
     int xpReward;
+    char itemNameAtk[30];
+    char itemNameDef[30];
 }Enemy;
 
 extern int row;
@@ -45,7 +47,7 @@ extern void advanceTimePeriod(int time);
 void playerStats(char menuName[], int menuNameSize, int viewLineSize, char *viewLineVariable);
 
 void warMenu();
-void warPanel(int currentHP, int currentEnemyHP, int enemyIdx);
+void warPanel(int currentHP, int currentEnemyHP, int enemyIdx, int triggerEnemyAttack);
 void cursorControlWar();
 void PrintBoardWar();
 void escapeWar(int enemyIdx);

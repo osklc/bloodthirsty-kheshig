@@ -219,7 +219,7 @@ Core game mechanics are functional. This is an early-stage project for education
 - [ ] **ANSI Art Storytelling**: Visual narrative using colored ASCII art for regions, bosses, and story events
 - [ ] **Advanced Enemy AI**: Enemies may flee or heal when low on health
 - [ ] **Multiple Character Classes**: Warrior (default) and Wizard (post-possession variant)
-- [ ] **Quest System**: Story-driven quests with rewards and progression
+- [ ] **Quest System**: Story-driven quests with rewards and progression (day based)
 
 ---
 

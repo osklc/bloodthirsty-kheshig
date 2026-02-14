@@ -31,25 +31,25 @@ int currentLogCount = 0;
 Enemy enemyPool[] = {
     // --- THE SILENT WOODS (Level 0-9) - Reality starts to feel "Off"
     // "Grey Wolf" -> "Pale Wolf" (Rengi solmuş, hasta gibi)
-    {"Silent Woods", "Pale Wolf",               35,  12,  1,  25, 0,  35},
+    {"Silent Woods", "Dire Wolf",            35,  12,  5,  25, 0,  35, "paw","fur"},
     // "Wild Boar" -> "Staring Boar" (Saldırmıyor, sadece sana bakıyor... ta ki sen saldırana kadar)
-    {"Silent Woods", "Staring Boar",            45,  13,  2,  30, 1,  38},
-    // "Rabid Fox" -> "Mimic Fox" (Tilki sesi değil, çocuk sesi çıkarıyor)
-    {"Silent Woods", "Mimic Fox",               38,  14,  2,  28, 2,  40},
+    {"Silent Woods", "Giant Bear",           45,  13,  9,  30, 1,  38, "paw","fur"},
+	// "Brown Bear" -> "Static Bear" (Bazen olduğu yerde donup kalıyor, glitch gibi)
+    {"Silent Woods", "Knight of Ignisum",    38,  14,  7,  28, 2,  40, "attack scroll", "defense scroll"},
     // "Forest Bandit" -> "Hollow Wanderer" (Yüzü yok, sadece kıyafet)
-    {"Silent Woods", "Hollow Wanderer",         55,  15,  3,  35, 3,  42},
-    // "Brown Bear" -> "Static Bear" (Bazen olduğu yerde donup kalıyor, glitch gibi)
-    {"Silent Woods", "Static Bear",             75,  16,  4,  40, 4,  45},
+    {"Silent Woods", "Lost Traveler",        55,  15,  6,  35, 3,  42, "attack scroll", "defense scroll"},
+    // "Rabid Fox" -> "Mimic Fox" (Tilki sesi değil, çocuk sesi çıkarıyor)
+    {"Silent Woods", "Imitative Fox",        75,  17,  10,  40, 4,  45, "paw", "fur"},
     // "Outlaw Archer" -> "Stuck Hunter" (Aynı cümleyi sürekli tekrar ediyor)
-    {"Silent Woods", "Stuck Hunter",        60,  17,  3,  38, 5,  43},
+    {"Silent Woods", "Stuck Hunter",         60,  17,  12,  38, 5,  43, "attack scroll", "defense scroll"},
     // "Feral Lynx" -> "Shadowless Lynx" (Gölgesi yok)
-    {"Silent Woods", "Shadowless Lynx",         50,  18,  2,  36, 5,  41},
+    {"Silent Woods", "Shadowless Lynx",      50,  18,  10,  36, 5,  41, "paw", "fur"},
     // "Mountain Lion" -> "Twisted Lion" (Boynu imkansız bir açıda kırık ama yaşıyor)
-    {"Silent Woods", "Twisted Lion",            80,  19,  5,  42, 6,  46},
+    {"Silent Woods", "Twisted Lion",         80,  19,  14,  42, 6,  46, "paw", "fur"},
     // "Bandit Chief" -> "The Forgotton One" (Kim olduğunu unutmuş, sadece öldürüyor)
-    {"Silent Woods", "The Forgotten One",       100, 20,  6,  50, 7,  48},
+    {"Silent Woods", "The Forgotten One",    100, 20,  12,  50, 7,  48, "attack scroll", "defense scroll"},
     // "Timber Wolf Pack" -> "Merged Pack" (Birbirine yapışmış birden fazla kurt)
-    {"Silent Woods", "Merged Pack",             110, 22,  7,  55, 9,  50},
+    {"Silent Woods", "Albasty",              110, 22,  22,  55, 9,  50, "evil spirit", "evil spirit"},
 
     // --- THE ROTTING GLADE (Level 10-19) - Flesh and nature fuse painfully
     // "Glowing Stag" -> "Mourner Stag" (Gözlerinden kan değil, siyah bir sıvı akıyor)
@@ -190,8 +190,18 @@ void makeCounterStrikeLog(char *out, size_t size, const char *defender, char *at
 	snprintf(out, size, "\033[33m%s\033[0m counters! Strikes %s for \033[31m%d\033[0m damage\n", defender, attacker, counterDamage);
 }
 
-void warPanel(int currentHP, int currentEnemyHP, int enemyIdx)
+void warPanel(int currentHP, int currentEnemyHP, int enemyIdx, int triggerEnemyAttack)
 {
+	if(currentHP <= 0 || currentEnemyHP <= 0)
+	{
+		checkBattleStatus(currentHP, currentEnemyHP, enemyIdx, triggerEnemyAttack);
+		return;
+	}
+	if(triggerEnemyAttack == 1)
+	{
+		checkBattleStatus(currentHP, currentEnemyHP, enemyIdx, 1);
+	}
+
 	system("cls");
 	char viewHeader[150];
 	snprintf(viewHeader, sizeof(viewHeader), "  \033[31mBLOODTHIRSTY KHESHIG\033[0m - \033[32m%s\033[0m", enemyPool[enemyIdx].place);
@@ -319,12 +329,6 @@ void warPanel(int currentHP, int currentEnemyHP, int enemyIdx)
 	printf("  4. Defense       | 5. Escape - Lose Gold\n");
 	printf("%s\n", viewLineWar);
 
-	if(currentHP <= 0 || currentEnemyHP <= 0)
-	{
-		checkBattleStatus(currentHP, currentEnemyHP, enemyIdx, 0);
-		return;
-	}
-
 	char choice;
 	do {
 		choice = getch();
@@ -387,7 +391,7 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
         
 		int randEndGold = enemyPool[enemyIdx].goldReward * 0.8;
 		int randStartGold = enemyPool[enemyIdx].goldReward * 1.2;
-		int randGold = rand() % randStartGold + randEndGold; 
+		int randGold = rand() % randStartGold + randEndGold;
 
 		kheshig.gold += randGold;
 
@@ -401,6 +405,60 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
 		kheshig.xp += randXp;
 
 		printf("    + %d Xp Earned\n", enemyPool[enemyIdx].xpReward);
+
+		int randItem = rand() % 30;
+		if(randItem<10)
+		{
+			int randFifty = rand() % 2;
+			int itemLevel = 3;
+			if(randFifty == 0)
+			{
+				kheshig.attack += itemLevel;
+				printf("    The %s dropped a basic %s item.\n", enemyPool[enemyIdx].name, enemyPool[enemyIdx].itemNameAtk);
+				printf("    + %d Attack scroll\n", itemLevel);
+			}
+			else
+			{
+				kheshig.defense += itemLevel;
+				printf("    The %s dropped a basic %s item.\n", enemyPool[enemyIdx].name, enemyPool[enemyIdx].itemNameDef);
+				printf("    + %d Defense scroll\n", itemLevel);
+			}
+		}
+		else if(randItem<15)
+		{
+			int randFifty = rand() % 2;
+			int itemLevel = 5;
+			if(randFifty == 0)
+			{
+				kheshig.attack += itemLevel;
+				printf("    The %s dropped a enchanted %s item.\n", enemyPool[enemyIdx].name, enemyPool[enemyIdx].itemNameAtk);
+				printf("    + %d Attack scroll\n", itemLevel);
+			}
+			else
+			{
+				kheshig.defense += itemLevel;
+				printf("    The %s dropped a enchanted %s item.\n", enemyPool[enemyIdx].name, enemyPool[enemyIdx].itemNameDef);
+				printf("    + %d Defense scroll\n", itemLevel);
+			}
+		}
+
+		else if(randItem<17)
+		{
+			int randFifty = rand() % 2;
+			int itemLevel = 5;
+			if(randFifty == 0)
+			{
+				kheshig.attack += itemLevel;
+				printf("    The %s dropped a cursed %s item.\n", enemyPool[enemyIdx].name, enemyPool[enemyIdx].itemNameAtk);
+				printf("    + %d Attack scroll\n", itemLevel);
+			}
+			else
+			{
+				kheshig.defense += itemLevel;
+				printf("    The %s dropped a cursed %s item.\n", enemyPool[enemyIdx].name, enemyPool[enemyIdx].itemNameDef);
+				printf("    + %d Defense scroll\n", itemLevel);
+			}
+		}
 
 		kheshig.activeHealth = pHP;
 		xpLevelCalc();
@@ -528,14 +586,14 @@ void defense(int pHP, int eHP, int enemyIdx)
 			makeDefendLog(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].attack, def);
 			appendWarLog(line);
 		}
-		warPanel(pHP-def, eHP, enemyIdx);
+		warPanel(pHP-def, eHP, enemyIdx, 1);
 	}
 	else
 	{
 		char counterLine[128];
 		makeCounterStrikeLog(counterLine, sizeof(counterLine), "Kheshig", enemyPool[enemyIdx].name, def);
 		appendWarLog(counterLine);
-		warPanel(pHP, eHP-def, enemyIdx);
+		warPanel(pHP, eHP-def, enemyIdx, 1);
 	}
 }
 
@@ -545,7 +603,7 @@ void quickAttack(int pHP, int eHP, int enemyIdx)
 	if(kheshig.activeStamina<quickStaminaLose)
 	{
 		appendWarLog("You ran out of breath! Try to defend.\n");
-		warPanel(pHP, eHP, enemyIdx);
+		warPanel(pHP, eHP, enemyIdx, 0);
 		return;
 	}
 	else
@@ -568,17 +626,17 @@ void quickAttack(int pHP, int eHP, int enemyIdx)
 				char eLine[128];
 				makeAttackLogEnemy(eLine, sizeof(eLine), enemyPool[enemyIdx].name, "Kheshig", enemyDmg);
 				appendWarLog(eLine);
-				warPanel(pHP - enemyDmg, eHP - dmg, enemyIdx);
+				warPanel(pHP - enemyDmg, eHP - dmg, enemyIdx, 0);
 			}
 			else
 			{
-				warPanel(pHP, eHP - dmg, enemyIdx);
+				warPanel(pHP, eHP - dmg, enemyIdx, 0);
 			}
 		}
 		else
 		{
 			appendWarLog("Kheshig missed their Quick Attack!\n");
-			warPanel(pHP, eHP, enemyIdx);
+			warPanel(pHP, eHP, enemyIdx, 0);
 		}
 	}
 }
@@ -589,7 +647,7 @@ void normalAttack(int pHP, int eHP, int enemyIdx)
 	if(kheshig.activeStamina<normalStaminaLose)
 	{
 		appendWarLog("You ran out of breath! Try a lighter move.\n");
-		warPanel(pHP, eHP, enemyIdx);
+		warPanel(pHP, eHP, enemyIdx, 0);
 		return;
 	}
 
@@ -597,7 +655,7 @@ void normalAttack(int pHP, int eHP, int enemyIdx)
 	{
 		kheshig.activeStamina -= normalStaminaLose;
 		int chance = rand() % 100;
-		if(chance < 75)
+		if(chance < 85)
 		{
 			int dmg = (int)(1.2 * (kheshig.attack - enemyPool[enemyIdx].defense));
 			if(dmg < 1) dmg = 1;
@@ -613,17 +671,17 @@ void normalAttack(int pHP, int eHP, int enemyIdx)
 				char eLine[128];
 				makeAttackLogEnemy(eLine, sizeof(eLine), enemyPool[enemyIdx].name, "Kheshig", enemyDmg);
 				appendWarLog(eLine);
-				warPanel(pHP - enemyDmg, eHP - dmg, enemyIdx);
+				warPanel(pHP - enemyDmg, eHP - dmg, enemyIdx, 0);
 			}
 			else
 			{
-				warPanel(pHP, eHP - dmg, enemyIdx);
+				warPanel(pHP, eHP - dmg, enemyIdx, 0);
 			}
 		}
 		else
 		{
 			appendWarLog("Kheshig missed their Normal Attack!\n");
-			warPanel(pHP, eHP, enemyIdx);
+			warPanel(pHP, eHP, enemyIdx, 0);
 		}
 	}
 }
@@ -634,7 +692,7 @@ void heavyAttack(int pHP, int eHP, int enemyIdx)
 	if(kheshig.activeStamina<heavyStaminaLose)
 	{
 		appendWarLog("You ran out of breath! Try a lighter move.\n");
-		warPanel(pHP, eHP, enemyIdx);
+		warPanel(pHP, eHP, enemyIdx, 0);
 		return;
 	}
 
@@ -658,17 +716,17 @@ void heavyAttack(int pHP, int eHP, int enemyIdx)
 				char eLine[128];
 				makeAttackLogEnemy(eLine, sizeof(eLine), enemyPool[enemyIdx].name, "Kheshig", enemyDmg);
 				appendWarLog(eLine);
-				warPanel(pHP - enemyDmg, eHP - dmg, enemyIdx);
+				warPanel(pHP - enemyDmg, eHP - dmg, enemyIdx, 0);
 			}
 			else
 			{
-				warPanel(pHP, eHP - dmg, enemyIdx);
+				warPanel(pHP, eHP - dmg, enemyIdx, 0);
 			}
 		}
 		else
 		{
 			appendWarLog("Kheshig missed their Heavy Attack!\n");
-			warPanel(pHP, eHP, enemyIdx);
+			warPanel(pHP, eHP, enemyIdx, 0);
 		}
 	}
 }
@@ -713,7 +771,7 @@ void cursorControlWar()
 {
 	char selectedDirection = '\0';
 	
-	while(selectedDirection != 'F' && selectedDirection != 'f' && selectedDirection != 'Q' && selectedDirection != 'q')
+	while(selectedDirection != 'F' && selectedDirection != 'f' && selectedDirection != 13 && selectedDirection != 'Q' && selectedDirection != 'q' && selectedDirection != 27)
 	{
 		system("cls");
 		playerStats("WAR MENU", 8, sizeof(viewLineWar), viewLineWar);
@@ -732,7 +790,7 @@ void cursorControlWar()
 			listRowWar++;
 			if(listRowWar > columnSize-1) listRowWar = 0;
 		}
-        else if(selectedDirection == 'F' || selectedDirection == 'f')
+        else if(selectedDirection == 'F' || selectedDirection == 'f' || selectedDirection == 13)
         {
 			if(listRowWar==0)
         	{
@@ -741,7 +799,7 @@ void cursorControlWar()
 				char startMsg[150];
     			sprintf(startMsg, "A wild %s appeared in the %s!\n",enemyPool[selectedEnemyIdx].name, enemyPool[selectedEnemyIdx].place);
 				appendWarLog(startMsg);
-				warPanel(kheshig.activeHealth, enemyPool[selectedEnemyIdx].health, selectedEnemyIdx);
+				warPanel(kheshig.activeHealth, enemyPool[selectedEnemyIdx].health, selectedEnemyIdx, 0);
 			}
 			else if(listRowWar==1)
 			{
@@ -751,7 +809,7 @@ void cursorControlWar()
 				FirstIntroductionMenu();
 			}
 		}
-		else if(selectedDirection == 'Q' || selectedDirection == 'q')
+		else if(selectedDirection == 'Q' || selectedDirection == 'q' || selectedDirection == 27)
         {
 			listRowWar=0;
         	FirstIntroductionMenu();

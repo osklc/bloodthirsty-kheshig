@@ -23,7 +23,7 @@ void cursorControlBlackSmith()
 {
 	char selectedDirection = '\0';
 	
-	while((selectedDirection != 'F' && selectedDirection != 'f') && (selectedDirection != 'Q' && selectedDirection != 'q'))
+	while(selectedDirection != 'F' && selectedDirection != 'f' && selectedDirection != 'Q' && selectedDirection != 'q' && selectedDirection != 13 && selectedDirection != 27)
 	{
 		system("cls");
 		playerStats("BLACKSMITH MENU", 15, sizeof(viewLineBlackSmith), viewLineBlackSmith);
@@ -42,7 +42,7 @@ void cursorControlBlackSmith()
             listRowBlackSmith++;
             if(listRowBlackSmith > 1) listRowBlackSmith = 0;
         }
-        else if(selectedDirection == 'F' || selectedDirection == 'f')
+        else if(selectedDirection == 'F' || selectedDirection == 'f' || selectedDirection == 13)
         {
         	if(listRowBlackSmith==0)
         	{
@@ -103,7 +103,7 @@ void cursorControlBlackSmith()
 				cursorControlBlackSmith();
 			}
 		}
-		else if(selectedDirection == 'Q' || selectedDirection == 'q')
+		else if(selectedDirection == 'Q' || selectedDirection == 'q' || selectedDirection == 27)
         {
 			listRowBlackSmith=0;
         	FirstIntroductionMenu();
