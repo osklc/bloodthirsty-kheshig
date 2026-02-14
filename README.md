@@ -19,7 +19,7 @@ Bloodthirsty Kheshig is a turn-based arena combat game developed in C, running n
 
 ## ✨ Features
 
-### Current Release (v0.2.0-pre-alpha)
+### Current Release (v0.3.0-pre-alpha)
 - **Main Menu System** - Navigate between 5 game zones
 - **Character Stat Tracking** - Health, XP, Level, Attack, Defense, and Gold management
 - **Save System (Save/Load)** - Automatic progress saving via binary .dat files
@@ -306,5 +306,5 @@ Created: January 2026
 
 ---
 
-**Last Updated**: February 13, 2026  
+**Last Updated**: February 15, 2026  
 **Current Version**: v0.3.0 (Pre-Alpha)
