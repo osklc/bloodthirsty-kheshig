@@ -8,7 +8,7 @@
 
 #include "../include/BLACKSMITHMENU_.h"
 
-char boardBlackSmith[4][40] = {"Sword Upgrade(ATK+(3-1)) - 90G","Armor Upgrade (DEF+(3-1)) - 90G"};
+char boardBlackSmith[4][40] = {"Sword Upgrade(ATK+(5-3)) - 80G","Armor Upgrade (DEF+(5-3)) - 80G"};
 
 char viewLineBlackSmith[] = "========================================================";
 
@@ -46,7 +46,7 @@ void cursorControlBlackSmith()
         {
         	if(listRowBlackSmith==0)
         	{
-				if(kheshig.gold<90)
+				if(kheshig.gold<80)
 				{
 					printf("\033[31mYou don't have enough gold!\033[0m");
 					printf("\n%s\n", viewLineBlackSmith);
@@ -55,19 +55,19 @@ void cursorControlBlackSmith()
 					getch();
 					FirstIntroductionMenu();
 				}
-				kheshig.gold-=90;
+				kheshig.gold-=80;
 				int chance = rand() % 100;
 				if(chance<20)
 				{
-					kheshig.attack += 1;
+					kheshig.attack += 3;
 				}
 				else if(chance<80)
 				{
-					kheshig.attack +=2;
+					kheshig.attack +=4;
 				}
 				else if(chance<100)
 				{
-					kheshig.attack +=3;
+					kheshig.attack +=5;
 				}
 				gameSave();
 				system("cls");
@@ -75,7 +75,7 @@ void cursorControlBlackSmith()
 			}
 			else if(listRowBlackSmith==1)
 			{
-				if(kheshig.gold<90)
+				if(kheshig.gold<80)
 				{
 					printf("\033[31mYou don't have enough gold!\033[0m");
 					printf("\n%s\n", viewLineBlackSmith);
@@ -84,19 +84,19 @@ void cursorControlBlackSmith()
 					getch();
 					FirstIntroductionMenu();
 				}
-				kheshig.gold-=90;
+				kheshig.gold-=80;
 				int chanceDef = rand() % 100;
 				if(chanceDef<20)
 				{
-					kheshig.attack += 1;
+					kheshig.attack += 3;
 				}
 				else if(chanceDef<80)
 				{
-					kheshig.attack +=2;
+					kheshig.attack +=4;
 				}
 				else if(chanceDef<100)
 				{
-					kheshig.attack +=3;
+					kheshig.attack +=5;
 				}
 				gameSave();
 				system("cls");
