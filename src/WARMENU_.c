@@ -23,7 +23,7 @@ int columnSize = 2;
 int listRowWar = 0;
 char places[3][20] = {"Northern Forests", "Hell", "Glacial Mountains"};
 
-char viewLineWar[] = "===========================================================";
+char viewLineWar[] = "==============================================================================";
 
 char warLogs[MAX_VISIBLE_LOGS][WAR_LINE_SIZE];
 int currentLogCount = 0;
@@ -198,24 +198,14 @@ static int applyDamageVariance(int baseDamage, int variance)
 	return dmg;
 }
 
-void warPanel(int currentHP, int currentEnemyHP, int enemyIdx, int triggerEnemyAttack)
+static void renderBattleScreen(int currentHP, int currentEnemyHP, int enemyIdx, int showActions)
 {
-	if(currentHP <= 0 || currentEnemyHP <= 0)
-	{
-		checkBattleStatus(currentHP, currentEnemyHP, enemyIdx, triggerEnemyAttack);
-		return;
-	}
-	if(triggerEnemyAttack == 1)
-	{
-		checkBattleStatus(currentHP, currentEnemyHP, enemyIdx, 1);
-	}
-
 	system("cls");
 	char viewHeader[150];
 	snprintf(viewHeader, sizeof(viewHeader), "  \033[31mBLOODTHIRSTY KHESHIG\033[0m - \033[32m%s\033[0m", enemyPool[enemyIdx].place);
 
 	int visibleLen = strlen("     BLOODTHIRSTY KHESHIG - ") + strlen(enemyPool[enemyIdx].place);
-    int viewDiff = (int)strlen(viewLineWar) - visibleLen;
+	int viewDiff = (int)strlen(viewLineWar) - visibleLen;
 
 	printf("%s\n",viewLineWar);
 	for(int i=0;i<viewDiff/2;i++)
@@ -228,7 +218,6 @@ void warPanel(int currentHP, int currentEnemyHP, int enemyIdx, int triggerEnemyA
 	char choicedEnemiesName[30];
 	strcpy(choicedEnemiesName, enemyPool[enemyIdx].name);
 
-	
 	printf("  ");
 	printf("[Kheshig]");
 	for(int j=0;j<35-strlen(choicedEnemiesName);j++)
@@ -333,9 +322,27 @@ void warPanel(int currentHP, int currentEnemyHP, int enemyIdx, int triggerEnemyA
 	}
 	printf("%s\n", viewLineWar);
 
-	printf("  1. Quick Attack  | 2. Normal Attack | 3. Heavy Attack\n");
-	printf("  4. Defense       | 5. Escape - Lose Gold\n");
-	printf("%s\n", viewLineWar);
+	if(showActions)
+	{
+		printf("  1. Quick Attack  | 2. Normal Attack | 3. Heavy Attack\n");
+		printf("  4. Defense       | 5. Escape - Lose Gold\n");
+		printf("%s\n", viewLineWar);
+	}
+}
+
+void warPanel(int currentHP, int currentEnemyHP, int enemyIdx, int triggerEnemyAttack)
+{
+	if(currentHP <= 0 || currentEnemyHP <= 0)
+	{
+		checkBattleStatus(currentHP, currentEnemyHP, enemyIdx, triggerEnemyAttack);
+		return;
+	}
+	if(triggerEnemyAttack == 1)
+	{
+		checkBattleStatus(currentHP, currentEnemyHP, enemyIdx, 1);
+	}
+
+	renderBattleScreen(currentHP, currentEnemyHP, enemyIdx, 1);
 
 	char choice;
 	do {
@@ -379,9 +386,15 @@ void escapeWar(int enemyIdx)
 
 void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
 {
-	char viewLineBattle[] = "======================================================================";
+	char viewLineBattle[] = "==============================================================================";
 	if(eHP <= 0)
 	{
+		char line[76];
+		snprintf(line, sizeof(line),"Kheshig delivered the finishing blow to the %s.\n", enemyPool[enemyIdx].name);
+		appendWarLog(line);
+
+		renderBattleScreen(pHP, eHP, enemyIdx, 1);
+
 		printf("Press any key to continue...");
 		getch();
 		system("cls");
@@ -481,6 +494,12 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
 	}
 	else if(pHP <= 0)
 	{
+		char line[76];
+		snprintf(line, sizeof(line),"Kheshig was sent to oblivion by the %s.\n", enemyPool[enemyIdx].name);
+		appendWarLog(line);
+
+		renderBattleScreen(pHP, eHP, enemyIdx, 1);
+
 		printf("Press any key to continue...");
 		getch();
 		system("cls");
