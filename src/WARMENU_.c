@@ -190,6 +190,14 @@ void makeCounterStrikeLog(char *out, size_t size, const char *defender, char *at
 	snprintf(out, size, "\033[33m%s\033[0m counters! Strikes %s for \033[31m%d\033[0m damage\n", defender, attacker, counterDamage);
 }
 
+static int applyDamageVariance(int baseDamage, int variance)
+{
+	int roll = rand() % (variance * 2 + 1);
+	int dmg = baseDamage + (roll - variance);
+	if(dmg < 1) dmg = 1;
+	return dmg;
+}
+
 void warPanel(int currentHP, int currentEnemyHP, int enemyIdx, int triggerEnemyAttack)
 {
 	if(currentHP <= 0 || currentEnemyHP <= 0)
@@ -406,7 +414,7 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
 
 		printf("    + %d Xp Earned\n", enemyPool[enemyIdx].xpReward);
 
-		int randItem = rand() % 30;
+		int randItem = rand() % 60;
 		if(randItem<10)
 		{
 			int randFifty = rand() % 2;
@@ -546,9 +554,14 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
 	{
 		if(triggerEnemyAttack == 1)
 		{
+			int baseEnemyDmg = enemyPool[enemyIdx].attack - kheshig.defense;
+			if(baseEnemyDmg < 1) baseEnemyDmg = 1;
 			int chanceFactor = 10 + rand() % 10;
-			int enemyDmg = (chanceFactor*(enemyPool[enemyIdx].attack - kheshig.defense))/10;
-			if(enemyDmg < 1) enemyDmg = 1;
+			int scaledEnemyDmg = (chanceFactor * baseEnemyDmg) / 10;
+			if(scaledEnemyDmg < 1) scaledEnemyDmg = 1;
+			int variance = scaledEnemyDmg / 6;
+			if(variance < 1) variance = 1;
+			int enemyDmg = applyDamageVariance(scaledEnemyDmg, variance);
 			
 			char line[128];
 			makeAttackLogEnemy(line, sizeof(line), enemyPool[enemyIdx].name, "Kheshig", enemyDmg);
@@ -573,27 +586,48 @@ void defense(int pHP, int eHP, int enemyIdx)
 	}
 
 	int chance = rand() % 100;
-	int def = enemyPool[enemyIdx].attack - kheshig.defense;
+	int defDamage = enemyPool[enemyIdx].attack - kheshig.defense;
+	if(defDamage < 1) defDamage = 0;
 	if(chance<50)
 	{
-		if(def<0)
+		if(defDamage == 0)
 		{
 			appendWarLog("Enemy missed their Attack!\n");
 		}
 		else
 		{
 			char line[128];
-			makeDefendLog(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].attack, def);
+			makeDefendLog(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].attack, defDamage);
 			appendWarLog(line);
 		}
-		warPanel(pHP-def, eHP, enemyIdx, 1);
+		warPanel(pHP-defDamage, eHP, enemyIdx, 1);
 	}
 	else
 	{
-		char counterLine[128];
-		makeCounterStrikeLog(counterLine, sizeof(counterLine), "Kheshig", enemyPool[enemyIdx].name, def);
-		appendWarLog(counterLine);
-		warPanel(pHP, eHP-def, enemyIdx, 1);
+		int counterBase = kheshig.attack - enemyPool[enemyIdx].defense;
+		if(counterBase < 1)
+		{
+			int heal = 1 + rand() % 2;
+			int healedEnemyHP = eHP + heal;
+			if(healedEnemyHP > enemyPool[enemyIdx].health)
+			{
+				healedEnemyHP = enemyPool[enemyIdx].health;
+			}
+			char healLine[128];
+			snprintf(healLine, sizeof(healLine), "%s regains %d HP while you fail to counter!\n", enemyPool[enemyIdx].name, heal);
+			appendWarLog(healLine);
+			warPanel(pHP, healedEnemyHP, enemyIdx, 1);
+		}
+		else
+		{
+			int variance = counterBase / 6;
+			if(variance < 1) variance = 1;
+			int counterDmg = applyDamageVariance(counterBase, variance);
+			char counterLine[128];
+			makeCounterStrikeLog(counterLine, sizeof(counterLine), "Kheshig", enemyPool[enemyIdx].name, counterDmg);
+			appendWarLog(counterLine);
+			warPanel(pHP, eHP-counterDmg, enemyIdx, 1);
+		}
 	}
 }
 
@@ -612,17 +646,25 @@ void quickAttack(int pHP, int eHP, int enemyIdx)
 		int chance = rand() % 100;
 		if(chance < 90)
 		{
-			int dmg = kheshig.attack - enemyPool[enemyIdx].defense;
-			if(dmg < 1) dmg = 1;
+			int baseDmg = kheshig.attack - enemyPool[enemyIdx].defense;
+			if(baseDmg < 1) baseDmg = 1;
+			int variance = baseDmg / 6;
+			if(variance < 1) variance = 1;
+			int dmg = applyDamageVariance(baseDmg, variance);
 			char line[128];
 			makeAttackLogPlayer(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].name, dmg);
 			appendWarLog(line);
 			
 			if(eHP - dmg > 0)
 			{
+				int baseEnemyDmg = enemyPool[enemyIdx].attack - kheshig.defense;
+				if(baseEnemyDmg < 1) baseEnemyDmg = 1;
 				int chanceFactor = 10 + rand() % 10;
-				int enemyDmg = (chanceFactor*(enemyPool[enemyIdx].attack - kheshig.defense))/10;
-				if(enemyDmg < 1) enemyDmg = 1;
+				int scaledEnemyDmg = (chanceFactor * baseEnemyDmg) / 10;
+				if(scaledEnemyDmg < 1) scaledEnemyDmg = 1;
+				int varianceEnemy = scaledEnemyDmg / 6;
+				if(varianceEnemy < 1) varianceEnemy = 1;
+				int enemyDmg = applyDamageVariance(scaledEnemyDmg, varianceEnemy);
 				char eLine[128];
 				makeAttackLogEnemy(eLine, sizeof(eLine), enemyPool[enemyIdx].name, "Kheshig", enemyDmg);
 				appendWarLog(eLine);
@@ -657,17 +699,31 @@ void normalAttack(int pHP, int eHP, int enemyIdx)
 		int chance = rand() % 100;
 		if(chance < 85)
 		{
-			int dmg = (int)(1.2 * (kheshig.attack - enemyPool[enemyIdx].defense));
-			if(dmg < 1) dmg = 1;
+			int baseDmg = kheshig.attack - enemyPool[enemyIdx].defense;
+			if(baseDmg < 1) baseDmg = 1;
+			int scaledDmg = (int)(1.2 * baseDmg);
+			if(scaledDmg < 1) scaledDmg = 1;
+			int variance = scaledDmg / 6;
+			if(variance < 1) variance = 1;
+			int dmg = applyDamageVariance(scaledDmg, variance);
+			int quickVariance = baseDmg / 6;
+			if(quickVariance < 1) quickVariance = 1;
+			int quickEquivalent = applyDamageVariance(baseDmg, quickVariance);
+			if(dmg < quickEquivalent) dmg = quickEquivalent;
 			char line[128];
 			makeAttackLogPlayer(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].name, dmg);
 			appendWarLog(line);
 			
 			if(eHP - dmg > 0)
 			{
+				int baseEnemyDmg = enemyPool[enemyIdx].attack - kheshig.defense;
+				if(baseEnemyDmg < 1) baseEnemyDmg = 1;
 				int chanceFactor = 10 + rand() % 10;
-				int enemyDmg = (chanceFactor*(enemyPool[enemyIdx].attack - kheshig.defense))/10;
-				if(enemyDmg < 1) enemyDmg = 1;
+				int scaledEnemyDmg = (chanceFactor * baseEnemyDmg) / 10;
+				if(scaledEnemyDmg < 1) scaledEnemyDmg = 1;
+				int varianceEnemy = scaledEnemyDmg / 6;
+				if(varianceEnemy < 1) varianceEnemy = 1;
+				int enemyDmg = applyDamageVariance(scaledEnemyDmg, varianceEnemy);
 				char eLine[128];
 				makeAttackLogEnemy(eLine, sizeof(eLine), enemyPool[enemyIdx].name, "Kheshig", enemyDmg);
 				appendWarLog(eLine);
@@ -702,17 +758,27 @@ void heavyAttack(int pHP, int eHP, int enemyIdx)
 		int chance = rand() % 100;
 		if(chance < 70)
 		{
-			int dmg = 2 * (kheshig.attack - enemyPool[enemyIdx].defense);
-			if(dmg < 1) dmg = 1;
+			int baseDmg = kheshig.attack - enemyPool[enemyIdx].defense;
+			if(baseDmg < 1) baseDmg = 1;
+			int scaledDmg = 2 * baseDmg;
+			if(scaledDmg < 1) scaledDmg = 1;
+			int variance = scaledDmg / 6;
+			if(variance < 1) variance = 1;
+			int dmg = applyDamageVariance(scaledDmg, variance);
 			char line[128];
 			makeAttackLogPlayer(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].name, dmg);
 			appendWarLog(line);
 			
 			if(eHP - dmg > 0)
 			{
+				int baseEnemyDmg = enemyPool[enemyIdx].attack - kheshig.defense;
+				if(baseEnemyDmg < 1) baseEnemyDmg = 1;
 				int chanceFactor = 10 + rand() % 10;
-				int enemyDmg = (chanceFactor*(enemyPool[enemyIdx].attack - kheshig.defense))/10;
-				if(enemyDmg < 1) enemyDmg = 1;
+				int scaledEnemyDmg = (chanceFactor * baseEnemyDmg) / 10;
+				if(scaledEnemyDmg < 1) scaledEnemyDmg = 1;
+				int varianceEnemy = scaledEnemyDmg / 6;
+				if(varianceEnemy < 1) varianceEnemy = 1;
+				int enemyDmg = applyDamageVariance(scaledEnemyDmg, varianceEnemy);
 				char eLine[128];
 				makeAttackLogEnemy(eLine, sizeof(eLine), enemyPool[enemyIdx].name, "Kheshig", enemyDmg);
 				appendWarLog(eLine);
