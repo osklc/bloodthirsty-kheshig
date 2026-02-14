@@ -25,6 +25,7 @@ extern struct Player kheshig;
 
 extern void FirstIntroductionMenu();
 extern void gameSave();
+extern void xpLevelCalc();
 void playerStats(char menuName[], int menuNameSize, int viewLineSize, char *viewLineVariable);
 
 void noGoldMarket();

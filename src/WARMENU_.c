@@ -18,12 +18,13 @@
 
 #include "../include/WARMENU_.h"
 
-char boardWar[4][20] = {"Start War","War Training"};
-int columnSize = 2;
+static int rowSize = 3;
+char boardWar[3][20] = {"Start War","War Training","to be continued"};
+
 int listRowWar = 0;
 char places[3][20] = {"Northern Forests", "Hell", "Glacial Mountains"};
 
-char viewLineWar[] = "==============================================================================";
+char viewLineWar[] = "=======================================================";
 
 char warLogs[MAX_VISIBLE_LOGS][WAR_LINE_SIZE];
 int currentLogCount = 0;
@@ -201,19 +202,20 @@ static int applyDamageVariance(int baseDamage, int variance)
 static void renderBattleScreen(int currentHP, int currentEnemyHP, int enemyIdx, int showActions)
 {
 	system("cls");
+	char viewLineRenderBattle[] = "=================================================================";
 	char viewHeader[150];
 	snprintf(viewHeader, sizeof(viewHeader), "  \033[31mBLOODTHIRSTY KHESHIG\033[0m - \033[32m%s\033[0m", enemyPool[enemyIdx].place);
 
 	int visibleLen = strlen("     BLOODTHIRSTY KHESHIG - ") + strlen(enemyPool[enemyIdx].place);
-	int viewDiff = (int)strlen(viewLineWar) - visibleLen;
+	int viewDiff = (int)strlen(viewLineRenderBattle) - visibleLen;
 
-	printf("%s\n",viewLineWar);
+	printf("%s\n",viewLineRenderBattle);
 	for(int i=0;i<viewDiff/2;i++)
 	{
 		printf(" ");
 	}
 	printf("%s", viewHeader);
-	printf("\n%s\n", viewLineWar);
+	printf("\n%s\n", viewLineRenderBattle);
 	
 	char choicedEnemiesName[30];
 	strcpy(choicedEnemiesName, enemyPool[enemyIdx].name);
@@ -310,7 +312,7 @@ static void renderBattleScreen(int currentHP, int currentEnemyHP, int enemyIdx, 
 	}
 	printf("]\n");
 
-	printf("\n%s\n", viewLineWar);
+	printf("\n%s\n", viewLineRenderBattle);
 	printf("                   --- BATTLE LOG ---\n");
 	for(int i=0;i<currentLogCount;i++)
 	{
@@ -320,13 +322,13 @@ static void renderBattleScreen(int currentHP, int currentEnemyHP, int enemyIdx, 
 	{
 		printf("\n");
 	}
-	printf("%s\n", viewLineWar);
+	printf("%s\n", viewLineRenderBattle);
 
 	if(showActions)
 	{
 		printf("  1. Quick Attack  | 2. Normal Attack | 3. Heavy Attack\n");
 		printf("  4. Defense       | 5. Escape - Lose Gold\n");
-		printf("%s\n", viewLineWar);
+		printf("%s\n", viewLineRenderBattle);
 	}
 }
 
@@ -357,7 +359,7 @@ void warPanel(int currentHP, int currentEnemyHP, int enemyIdx, int triggerEnemyA
 
 void escapeWar(int enemyIdx)
 {
-	char viewLineEscape[] = "======================================================================";
+	char viewLineEscape[] = "=====================================================================";
 	system("cls");
 		int loss = (kheshig.gold * 15) / 100;
         printf("%s\n", viewLineEscape);
@@ -386,7 +388,7 @@ void escapeWar(int enemyIdx)
 
 void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
 {
-	char viewLineBattle[] = "==============================================================================";
+	char viewLineBattle[] = "============================================================";
 	if(eHP <= 0)
 	{
 		char line[76];
@@ -424,7 +426,7 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
 		int randXp = rand() % randStartXp + randEndXp; 
 
 		kheshig.xp += randXp;
-
+		xpLevelCalc();
 		printf("    + %d Xp Earned\n", enemyPool[enemyIdx].xpReward);
 
 		int randItem = rand() % 60;
@@ -482,7 +484,6 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
 		}
 
 		kheshig.activeHealth = pHP;
-		xpLevelCalc();
 		gameSave();
 
 		printf("\n%s\n", viewLineBattle);
@@ -868,12 +869,12 @@ void cursorControlWar()
 		if(selectedDirection == 'W' || selectedDirection == 'w' || selectedDirection == 72)
 		{
 			listRowWar--;
-			if(listRowWar < 0) listRowWar = columnSize-1;
+			if(listRowWar < 0) listRowWar = rowSize-2;
 		}
 		else if(selectedDirection == 'S' || selectedDirection == 's' || selectedDirection == 80)
 		{
 			listRowWar++;
-			if(listRowWar > columnSize-1) listRowWar = 0;
+			if(listRowWar > rowSize-2) listRowWar = 0;
 		}
         else if(selectedDirection == 'F' || selectedDirection == 'f' || selectedDirection == 13)
         {
@@ -908,7 +909,7 @@ void cursorControlWar()
 
 void PrintBoardWar()
 {
-	for(int i=0;i<columnSize;i++)
+	for(int i=0;i<rowSize;i++)
 	{
 		if(listRowWar==i)
 		{

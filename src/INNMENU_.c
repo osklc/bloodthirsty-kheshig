@@ -9,12 +9,13 @@
 
 #include "../include/INNMENU_.h"
 
-char boardInn[3][60] = {"Rest(+25HP) - 5G (1 period passes)", "Work at Inn - Earn 5G (1 period passes)", "Gamble"};
+static int rowSize = 4;
+char boardInn[4][60] = {"Rest(+25HP) - 5G (1 period passes)", "Work at Inn - Earn 5G (1 period passes)", "Gamble", "to be continued"};
+static int rowSizeGambling = 3;
 char boardGambling[3][60] = {"Coin Flip - Bet 30G (50%% win chance, x2 reward)", "Dice Roll - Bet 50G (50%% win chance, x2 reward)", "High Stakes - Bet 100G (30%% win chance, x5 reward)"};
-char viewLineInn[] = "========================================================";
+char viewLineInn[] = "=======================================================";
 int listRowInn = 0;
 int listRowGambling = 0;
-int rowSize = 3;
 
 void innMenu()
 {
@@ -37,12 +38,12 @@ void cursorControlInn()
 		if(selectedDirection == 'W' || selectedDirection == 'w' || selectedDirection == 72)
 		{
 			listRowInn--;
-			if(listRowInn < 0) listRowInn = 2;
+			if(listRowInn < 0) listRowInn = rowSize-2;
 		}
 		else if(selectedDirection == 'S' || selectedDirection == 's' || selectedDirection == 80)
 		{
 			listRowInn++;
-			if(listRowInn > 2) listRowInn = 0;
+			if(listRowInn > rowSize-2) listRowInn = 0;
 		}
         else if(selectedDirection == 'F' || selectedDirection == 'f' || selectedDirection == 13)
         {
@@ -66,6 +67,7 @@ void cursorControlInn()
 						kheshig.activeHealth=kheshig.health;
 					}
 					advanceTimePeriod(1);
+					advanceTime();
 					gameSave();
 					system("cls");
 					cursorControlInn();
@@ -75,6 +77,7 @@ void cursorControlInn()
 			{
 				kheshig.gold += 5;
 				advanceTimePeriod(1);
+				advanceTime();
 				gameSave();
 				system("cls");
 				cursorControlInn();
@@ -94,7 +97,7 @@ void cursorControlInn()
 
 void printInnList()
 {
-	for(int i=0;i<3;i++)
+	for(int i=0;i<rowSize;i++)
 	{
 		if(listRowInn==i)
 		{
@@ -129,7 +132,7 @@ void playGambling()
 		printf("%s\n", viewLineInn);
 		printf("\033[33m\033[1mYour Gold:\033[0m %d\n\n", kheshig.gold);
 		printGamblingList();
-		printf("\n[W-S] Move  |  [F] Select  |  [Q] Back to main menu\n");
+		printf("[W-S] Move  |  [F] Select  |  [Q] Back to main menu\n");
 		printf("%s", viewLineInn);
 		
 		choiceGambling = getch();
@@ -137,12 +140,12 @@ void playGambling()
 		if(choiceGambling == 'W' || choiceGambling == 'w' || choiceGambling == 72)
 		{
 			listRowGambling--;
-			if(listRowGambling < 0) listRowGambling = rowSize-1;
+			if(listRowGambling < 0) listRowGambling = rowSizeGambling-1;
 		}
 		else if(choiceGambling == 'S' || choiceGambling == 's' || choiceGambling == 80)
 		{
 			listRowGambling++;
-			if(listRowGambling > rowSize-1) listRowGambling = 0;
+			if(listRowGambling > rowSizeGambling-1) listRowGambling = 0;
 		}
 
 		else if(choiceGambling == 'F' || choiceGambling == 'f')
@@ -278,7 +281,7 @@ void playGambling()
 
 void printGamblingList()
 {
-	for(int i=0;i<rowSize;i++)
+	for(int i=0;i<rowSizeGambling;i++)
 	{
 		if(listRowGambling==i)
 		{

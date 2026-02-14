@@ -8,9 +8,10 @@
 
 #include "../include/BLACKSMITHMENU_.h"
 
-char boardBlackSmith[4][40] = {"Sword Upgrade(ATK+(5-3)) - 80G","Armor Upgrade (DEF+(5-3)) - 80G"};
+static int rowSize = 3;
+char boardBlackSmith[3][40] = {"Sword Upgrade(ATK+(5-3)) - 80G","Armor Upgrade (DEF+(5-3)) - 80G", "to be continued"};
 
-char viewLineBlackSmith[] = "========================================================";
+char viewLineBlackSmith[] = "=======================================================";
 
 int listRowBlackSmith = 0;
 
@@ -35,12 +36,12 @@ void cursorControlBlackSmith()
         if(selectedDirection == 'W' || selectedDirection == 'w' || selectedDirection == 72)
         {
             listRowBlackSmith--;
-            if(listRowBlackSmith < 0) listRowBlackSmith = 1;
+            if(listRowBlackSmith < 0) listRowBlackSmith = rowSize-2;
         }
         else if(selectedDirection == 'S' || selectedDirection == 's' || selectedDirection == 80)
         {
             listRowBlackSmith++;
-            if(listRowBlackSmith > 1) listRowBlackSmith = 0;
+            if(listRowBlackSmith > rowSize-2) listRowBlackSmith = 0;
         }
         else if(selectedDirection == 'F' || selectedDirection == 'f' || selectedDirection == 13)
         {
@@ -119,7 +120,7 @@ void cursorControlBlackSmith()
 
 void printBlackSmithList()
 {
-	for(int i=0;i<2;i++)
+	for(int i=0;i<rowSize;i++)
 	{
 		if(listRowBlackSmith==i)
 		{

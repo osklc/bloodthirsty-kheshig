@@ -25,6 +25,9 @@ extern struct Player kheshig;
 
 extern void FirstIntroductionMenu();
 extern void gameSave();
+extern void advanceTime();
+extern void advanceTimePeriod(int time);
+
 void playerStats(char menuName[], int menuNameSize, int viewLineSize, char *viewLineVariable);
 
 void noGoldGambling();
@@ -33,4 +36,3 @@ void cursorControlInn();
 void printInnList();
 void playGambling();
 void printGamblingList();
-void advanceTimePeriod(int time);

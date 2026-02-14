@@ -8,9 +8,10 @@
 
 #include "../include/MARKETMENU_.h"
 
-char boardMarket[4][40] = {"Buy Health Potion(+50H) - 20G","Buy Damage Scroll(+3ATK) - 50G","Buy ARMOR (+3DEF) - 50G","Sell Items"};
+static int rowSize = 5;
+char boardMarket[5][40] = {"Buy Health Potion(+50H) - 20G","Buy Damage Scroll(+3ATK) - 50G","Buy ARMOR (+3DEF) - 50G","Buy XP Potion(100XP) - 50G","to be continued"};
 
-char viewLineMarket[] = "========================================================";
+char viewLineMarket[] = "=======================================================";
 
 int listRow = 0;
 
@@ -45,12 +46,12 @@ void cursorControlMarket()
         if(selectedDirection == 'W' || selectedDirection == 'w' || selectedDirection == 72)
         {
             listRow--;
-            if(listRow < 0) listRow = 3;
+            if(listRow < 0) listRow = rowSize-2;
         }
         else if(selectedDirection == 'S' || selectedDirection == 's' || selectedDirection == 80)
         {
             listRow++;
-            if(listRow > 3) listRow = 0;
+            if(listRow > rowSize-2) listRow = 0;
         }
         else if(selectedDirection == 'F' || selectedDirection == 'f' || selectedDirection == 13)
         {
@@ -60,15 +61,18 @@ void cursorControlMarket()
 				{
 					noGoldMarket();
 				}
-				kheshig.gold-=20;
-				kheshig.activeHealth+=50;
-				if(kheshig.activeHealth>kheshig.health)
+				else
 				{
-					kheshig.activeHealth=kheshig.health;
+					kheshig.gold-=20;
+					kheshig.activeHealth+=50;
+					if(kheshig.activeHealth>kheshig.health)
+					{
+						kheshig.activeHealth=kheshig.health;
+					}
+					gameSave();
+					system("cls");
+					marketMenu();
 				}
-				gameSave();
-				system("cls");
-				cursorControlMarket();
 			}
 			else if(listRow==1)
 			{
@@ -76,11 +80,14 @@ void cursorControlMarket()
 				{
 					noGoldMarket();
 				}
-				kheshig.gold-=50;
-				kheshig.attack+=3;
-				gameSave();
-				system("cls");
-				cursorControlMarket();
+				else
+				{
+					kheshig.gold-=50;
+					kheshig.attack+=3;
+					gameSave();
+					system("cls");
+					marketMenu();
+				}
 			}
 			else if(listRow==2)
 			{
@@ -88,16 +95,30 @@ void cursorControlMarket()
 				{
 					noGoldMarket();
 				}
-				kheshig.gold-=50;
-				kheshig.defense+=3;
-				gameSave();
-				system("cls");
-				cursorControlMarket();
+				else
+				{
+					kheshig.gold-=50;
+					kheshig.defense+=3;
+					gameSave();
+					system("cls");
+					marketMenu();
+				}
 			}
 			else if(listRow==3)
 			{
-				printf("In process");
-				marketMenu();
+				if(kheshig.gold<50)
+				{
+					noGoldMarket();
+				}
+				else
+				{
+					kheshig.gold -= 50;
+					kheshig.xp += 100;
+					xpLevelCalc();
+					gameSave();
+					system("cls");
+					marketMenu();
+				}
 			}
 		}
 		else if(selectedDirection == 'Q' || selectedDirection == 'q' || selectedDirection == 27)
@@ -114,7 +135,7 @@ void cursorControlMarket()
 
 void printMarketList()
 {
-	for(int i=0;i<4;i++)
+	for(int i=0;i<rowSize;i++)
 	{
 		if(listRow==i)
 		{

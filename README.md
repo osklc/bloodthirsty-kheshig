@@ -204,7 +204,7 @@ Core game mechanics are functional. This is an early-stage project for education
 - [x] Level Scaling: XP required for next level will increase exponentially
 - [x] Stamina System: Attacks will consume energy, requiring strategic pauses
 - [x] Dynamic XP & Gold: Rewards will vary based on RNG (Random Number Generation)
-- [ ] Loot Drop: Enemies will have a chance to drop rare items (Stat boosters)
+- [x] Loot Drop: Enemies will have a chance to drop rare items (Stat boosters)
 - [ ] Expanded Market: Introduction of XP Potions and special scrolls
 
 ### v0.4.0+ - Atmosphere & Story (The "Possession" Update)

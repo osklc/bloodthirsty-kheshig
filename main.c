@@ -247,6 +247,7 @@ void hideCursor() {
 
 void FirstIntroductionMenu()
 {
+	gameSave();
 	system("cls");
 	kheshig.activeStamina = kheshig.maxStamina;
 	cursorControl();
