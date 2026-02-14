@@ -205,7 +205,7 @@ Core game mechanics are functional. This is an early-stage project for education
 - [x] Stamina System: Attacks will consume energy, requiring strategic pauses
 - [x] Dynamic XP & Gold: Rewards will vary based on RNG (Random Number Generation)
 - [x] Loot Drop: Enemies will have a chance to drop rare items (Stat boosters)
-- [ ] Expanded Market: Introduction of XP Potions and special scrolls
+- [x] Expanded Market: Introduction of XP Potions and special scrolls
 
 ### v0.4.0+ - Atmosphere & Story (The "Possession" Update)
 - [ ] Boss System: Bosses will be added, and separate mechanics will be added for each boss.
