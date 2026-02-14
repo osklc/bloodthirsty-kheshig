@@ -261,15 +261,6 @@ Turn-Based Arena Fighter in terminal/
 - `time.h` - Time functions (RNG seeding, delays)
 - `string.h` - String handling and memory operations
 
-### ANSI Escape Codes
-The game uses ANSI escape codes for colored terminal output:
-- `\033[31m` - Red text
-- `\033[33m` - Yellow text
-- `\033[36m` - Cyan text
-- `\033[3m` - Italic text
-- `\033[1m` - Bold text
-- `\033[0m` - Reset formatting
-
 ---
 
 ## 🐛 Known Issues
