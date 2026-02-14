@@ -43,6 +43,23 @@ void cursorControlMarket()
 		printf("\n%s\n", viewLineMarket);
 		selectedDirection = getch();
 		
+		if(selectedDirection == '1')
+		{
+			listRow = 0;
+		}
+		else if(selectedDirection == '2')
+		{
+			listRow = 1;
+		}
+		else if(selectedDirection == '3')
+		{
+			listRow = 2;
+		}
+		else if(selectedDirection == '4')
+		{
+			listRow = 3;
+		}
+
         if(selectedDirection == 'W' || selectedDirection == 'w' || selectedDirection == 72)
         {
             listRow--;

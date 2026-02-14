@@ -866,6 +866,15 @@ void cursorControlWar()
 		printf("%s\n",viewLineWar);
 		selectedDirection = getch();
 		
+		if(selectedDirection == '1')
+		{
+			listRowWar = 0;
+		}
+		else if(selectedDirection == '2')
+		{
+			listRowWar = 1;
+		}
+
 		if(selectedDirection == 'W' || selectedDirection == 'w' || selectedDirection == 72)
 		{
 			listRowWar--;

@@ -34,7 +34,20 @@ void cursorControlInn()
 		printf("[W-S] Move  |  [F] Select  |  [Q] Back to main menu\n");
 		printf("%s\n",viewLineInn);
 		selectedDirection = getch();
-		
+
+		if(selectedDirection == '1')
+		{
+			listRowInn = 0;
+		}
+		else if(selectedDirection == '2')
+		{
+			listRowInn = 1;
+		}
+		else if(selectedDirection == '3')
+		{
+			listRowInn = 2;
+		}
+
 		if(selectedDirection == 'W' || selectedDirection == 'w' || selectedDirection == 72)
 		{
 			listRowInn--;
@@ -136,6 +149,19 @@ void playGambling()
 		printf("%s", viewLineInn);
 		
 		choiceGambling = getch();
+
+		if(choiceGambling == '1')
+		{
+			listRowGambling = 0;
+		}
+		else if(choiceGambling == '2')
+		{
+			listRowGambling = 1;
+		}
+		else if(choiceGambling == '3')
+		{
+			listRowGambling = 2;
+		}
 
 		if(choiceGambling == 'W' || choiceGambling == 'w' || choiceGambling == 72)
 		{

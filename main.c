@@ -356,6 +356,23 @@ void cursorControl()
 		printf("%s\n",viewLine);
 		selectedDirection = getch();
 		
+		if(selectedDirection == '1')
+		{
+			column = 0;
+		}
+		if(selectedDirection == '2')
+		{
+			column = 1;
+		}
+		if(selectedDirection == '3')
+		{
+			column = 2;
+		}
+		if(selectedDirection == '4')
+		{
+			column = 3;
+		}
+
         if(selectedDirection == 'A' || selectedDirection == 'a' || selectedDirection == 75)
         {
             column--;

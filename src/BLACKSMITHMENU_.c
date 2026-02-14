@@ -33,6 +33,15 @@ void cursorControlBlackSmith()
 		printf("\n%s\n", viewLineBlackSmith);
 		selectedDirection = getch();
 		
+		if(selectedDirection == '1')
+		{
+			listRowBlackSmith = 0;
+		}
+		else if(selectedDirection == '2')
+		{
+			listRowBlackSmith = 1;
+		}
+
         if(selectedDirection == 'W' || selectedDirection == 'w' || selectedDirection == 72)
         {
             listRowBlackSmith--;
@@ -54,25 +63,28 @@ void cursorControlBlackSmith()
 					printf("Press any key to continue...");
 					printf("\n%s\n", viewLineBlackSmith);
 					getch();
-					FirstIntroductionMenu();
+					blacksmithMenu();
 				}
-				kheshig.gold-=80;
-				int chance = rand() % 100;
-				if(chance<20)
+				else
 				{
-					kheshig.attack += 3;
+					kheshig.gold-=80;
+					int chance = rand() % 100;
+					if(chance<20)
+					{
+						kheshig.attack += 3;
+					}
+					else if(chance<80)
+					{
+						kheshig.attack +=4;
+					}
+					else if(chance<100)
+					{
+						kheshig.attack +=5;
+					}
+					gameSave();
+					system("cls");
+					cursorControlBlackSmith();
 				}
-				else if(chance<80)
-				{
-					kheshig.attack +=4;
-				}
-				else if(chance<100)
-				{
-					kheshig.attack +=5;
-				}
-				gameSave();
-				system("cls");
-				cursorControlBlackSmith();
 			}
 			else if(listRowBlackSmith==1)
 			{
@@ -83,25 +95,28 @@ void cursorControlBlackSmith()
 					printf("Press any key to continue...");
 					printf("\n%s\n", viewLineBlackSmith);
 					getch();
-					FirstIntroductionMenu();
+					blacksmithMenu();
 				}
-				kheshig.gold-=80;
-				int chanceDef = rand() % 100;
-				if(chanceDef<20)
+				else
 				{
-					kheshig.attack += 3;
+					kheshig.gold-=80;
+					int chanceDef = rand() % 100;
+					if(chanceDef<20)
+					{
+						kheshig.attack += 3;
+					}
+					else if(chanceDef<80)
+					{
+						kheshig.attack +=4;
+					}
+					else if(chanceDef<100)
+					{
+						kheshig.attack +=5;
+					}
+					gameSave();
+					system("cls");
+					cursorControlBlackSmith();
 				}
-				else if(chanceDef<80)
-				{
-					kheshig.attack +=4;
-				}
-				else if(chanceDef<100)
-				{
-					kheshig.attack +=5;
-				}
-				gameSave();
-				system("cls");
-				cursorControlBlackSmith();
 			}
 		}
 		else if(selectedDirection == 'Q' || selectedDirection == 'q' || selectedDirection == 27)
