@@ -477,7 +477,7 @@ void checkBattleStatus(int pHP, int eHP, int currentPossession, int enemyIdx, in
 	kheshig.activePossession = clampPossession(currentPossession);
 	checkMageFormState(kheshig.activePossession);
 
-	char viewLineBattle[] = "============================================================";
+	char viewLineBattle[] = "=============================================================================";
 	if(eHP <= 0)
 	{
 		char line[76];
