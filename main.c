@@ -22,6 +22,7 @@ struct Player kheshig;
 
 //Prototype
 void FirstIntroductionMenu();
+void startScreen();
 void hideCursor();
 void gotoxy(int x, int y);
 void PrintBoard();
@@ -250,7 +251,23 @@ void FirstIntroductionMenu()
 	gameSave();
 	system("cls");
 	kheshig.activeStamina = kheshig.maxStamina;
+
+	startScreen();
+	Sleep(3000);
+	system("cls");
 	cursorControl();
+}
+
+void startScreen()
+{
+	printf("\033[33m______ _                 _       _   _     _          _           _   ___               _     _       ");
+	printf("\n| ___ \\ |               | |     | | | |   (_)        | |         | | / / |             | |   (_)      ");
+	printf("\n| |_/ / | ___   ___   __| |_   _| |_| |__  _ _ __ ___| |_ _   _  | |/ /| |__   ___  ___| |__  _  __ _ ");
+	printf("\n| ___ \\ |/ _ \\ / _ \\ / _` | | | | __| '_ \\| | '__/ __| __| | | | |    \\| '_ \\ / _ \\/ __| '_ \\| |/ _` |");
+	printf("\n| |_/ / | (_) | (_) | (_| | |_| | |_| | | | | |  \\__ \\ |_| |_| | | |\\  \\ | | |  __/\\__ \\ | | | | (_| |");
+	printf("\n\\____/|_|\\___/ \\___/ \\__,_|\\__, |\\__|_| |_|_|_|  |___/\\__|\\__, | \\_| \\_/_| |_|\\___||___/_| |_|_|\\__, |");
+	printf("\n                            __/ |                          __/ |                                 __/ |");
+	printf("\n                           |___/                          |___/                                 |___/ \033[0m");
 }
 
 void advanceTimePeriod(int time)
