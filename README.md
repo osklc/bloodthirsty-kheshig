@@ -211,10 +211,10 @@ Core game mechanics are functional. This is an early-stage project for education
 - [ ] Boss System: Bosses will be added, and separate mechanics will be added for each boss.
 - [x] **Possession Bar System**: A corruption/possession meter that fills during battles and story progression
 - [x] **Demonic Transformation**: When the Possession Bar fills completely, an ancient demon possesses Kheshig during combat
-- [ ] **Mage Form**: Upon possession, Kheshig transforms into a sorcerer with:
-  - Mana system (replaces Stamina) for spell casting
+- [ ] **Demon Form**: Upon possession, Kheshig transforms into a sorcerer with:
+  - Rage system (replaces Stamina) for spell casting
   - Magical attacks with higher damage scaling
-  - Unique visual feedback and combat mechanics
+  - Unique visual feedback
 - [ ] **Story Integration**: Narrative consequences and choices related to the possession mechanic
 - [ ] **ANSI Art Storytelling**: Visual narrative using colored ASCII art for regions, bosses, and story events
 - [ ] **Advanced Enemy AI**: Enemies may flee or heal when low on health

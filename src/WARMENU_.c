@@ -22,7 +22,7 @@ static int rowSize = 3;
 char boardWar[3][20] = {"Start War","War Training","to be continued"};
 
 int listRowWar = 0;
-char places[3][20] = {"Northern Forests", "Hell", "Glacial Mountains"};
+char places[3][20] = {"Silent Woods", "Rotting Glade", "Void Horizon"};
 
 char viewLineWar[] = "=======================================================";
 
@@ -143,7 +143,13 @@ const char* defeatTexts[] = {
 	"The spirits did not hear your final prayer."
 };
 
-
+const char* possessionTexts[] = {
+	"Finally... I've been waiting so long.",
+	"I'll enjoy borrowing this body.",
+	"Your weakness summoned me. How delightful.",
+	"Now we are both here. And we both want the same thing.",
+	"I can feel your heartbeat. It's... excited."
+};
 void warMenu()
 {
 	cursorControlWar();
@@ -232,6 +238,11 @@ static void checkMageFormState(int currentPossession)
 	{
 		kheshig.mageForm = 1;
 		appendWarLog("Demonic Possession awakened! Mage Form is active.\n");
+		int possessionCount = sizeof(possessionTexts) / sizeof(possessionTexts[0]);
+        int idxP = rand() % possessionCount;
+		char possessionLine[160];
+		snprintf(possessionLine, sizeof(possessionLine), "Demon: %s\n", possessionTexts[idxP]);
+		appendWarLog(possessionLine);
 	}
 }
 
@@ -485,6 +496,22 @@ void checkBattleStatus(int pHP, int eHP, int currentPossession, int enemyIdx, in
 		advanceTime();
         
         printf("\n    Kheshig has defeated the %s!\n", enemyPool[enemyIdx].name);
+		if(strcmp(enemyPool[enemyIdx].place, "Silent Woods") == 0)
+		{
+			printf("    The Silent Woods bow for a moment, then whisper your name with dread.\n");
+		}
+		else if(strcmp(enemyPool[enemyIdx].place, "Rotting Glade") == 0)
+		{
+			printf("    In the Rotting Glade, your victory blooms from rot and ruin.\n");
+		}
+		else if(strcmp(enemyPool[enemyIdx].place, "Void Horizon") == 0)
+		{
+			printf("    Even the Void Horizon recoils; something ancient now fears you.\n");
+		}
+		else
+		{
+			printf("    This land marks your triumph, even if only for one bloodstained night.\n");
+		}
 		int victoryCount = sizeof(victoryTexts) / sizeof(victoryTexts[0]);
         int idx = rand() % victoryCount;
         printf("    %s\n",victoryTexts[idx]);
@@ -614,16 +641,22 @@ void checkBattleStatus(int pHP, int eHP, int currentPossession, int enemyIdx, in
         
         printf("\n    You were bested by the %s.\n", enemyPool[enemyIdx].name);
         
-		if(strcmp(enemyPool[enemyIdx].place, "The Silent Woods") == 0)
+		if(strcmp(enemyPool[enemyIdx].place, "Silent Woods") == 0)
 		{
-			printf("    Death is a cold companion in the %s...\n", enemyPool[enemyIdx].place);
+			printf("    In the Silent Woods, even your final scream is swallowed by the trees.\n");
 		}
-		/*
-		else if(strcmp(enemyPool[enemyIdx].place, "sdasdsadadasdsadsad") == 0)
+		else if(strcmp(enemyPool[enemyIdx].place, "Rotting Glade") == 0)
 		{
-			printf("    Death is a cold companion in the %s...\n", enemyPool[enemyIdx].place);
+			printf("    The Rotting Glade drinks your blood and blooms in your name.\n");
 		}
-		*/
+		else if(strcmp(enemyPool[enemyIdx].place, "Void Horizon") == 0)
+		{
+			printf("    At the Void Horizon, your soul unravels before your body can fall.\n");
+		}
+		else
+		{
+			printf("    This land claims another warrior and forgets him by dawn.\n");
+		}
 
 		int defeatCount = sizeof(defeatTexts) / sizeof(defeatTexts[0]);
         int idx = rand() % defeatCount;
