@@ -12,6 +12,8 @@ typedef struct Player{
     int activeHealth;
     int activeStamina;
     int maxStamina;
+    int activePossession;
+    int maxPossession;
     int gold;
     int level;
 	int attack;
@@ -20,6 +22,7 @@ typedef struct Player{
     int currentDay;
     int loopCount;
     int currentTimePeriod;
+    int mageForm;
 }Player;
 extern struct Player kheshig;
 
@@ -47,7 +50,7 @@ extern void advanceTimePeriod(int time);
 void playerStats(char menuName[], int menuNameSize, int viewLineSize, char *viewLineVariable);
 
 void warMenu();
-void warPanel(int currentHP, int currentEnemyHP, int enemyIdx, int triggerEnemyAttack);
+void warPanel(int currentHP, int currentEnemyHP, int currentPossession, int enemyIdx, int triggerEnemyAttack);
 void cursorControlWar();
 void PrintBoardWar();
 void escapeWar(int enemyIdx);
@@ -59,7 +62,7 @@ void makeDefendLog(char *out, size_t size, const char *defender, int totalDamage
 void makeCounterStrikeLog(char *out, size_t size, const char *defender, char *attacker, int counterDamage);
 void appendWarLog(const char *line);
 
-void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack);
+void checkBattleStatus(int pHP, int eHP, int currentPossession, int enemyIdx, int triggerEnemyAttack);
 void quickAttack(int pHP, int eHP, int enemyIdx);
 void normalAttack(int pHP, int eHP, int enemyIdx);
 void heavyAttack(int pHP, int eHP, int enemyIdx);

@@ -61,6 +61,9 @@ void initNewGame()
     kheshig.currentDay = 1;
     kheshig.loopCount = 0;
     kheshig.currentTimePeriod = 0;
+	kheshig.mageForm = 0;
+	kheshig.activePossession = 0;
+    kheshig.maxPossession = 100;
 }
 
 int checkSave()
@@ -252,8 +255,8 @@ void FirstIntroductionMenu()
 	system("cls");
 	kheshig.activeStamina = kheshig.maxStamina;
 
-	startScreen();
-	Sleep(3000);
+	//startScreen();
+	//Sleep(2500);
 	system("cls");
 	cursorControl();
 }

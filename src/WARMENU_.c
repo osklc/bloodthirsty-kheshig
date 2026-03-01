@@ -147,6 +147,8 @@ const char* defeatTexts[] = {
 void warMenu()
 {
 	cursorControlWar();
+	kheshig.activePossession = 0;
+	kheshig.maxPossession = 100;
 }
 
 void clearWarLog() 
@@ -197,6 +199,46 @@ static int applyDamageVariance(int baseDamage, int variance)
 	int dmg = baseDamage + (roll - variance);
 	if(dmg < 1) dmg = 1;
 	return dmg;
+}
+
+static int clampPossession(int possession)
+{
+	if(possession < 0) return 0;
+	if(possession > kheshig.maxPossession) return kheshig.maxPossession;
+	return possession;
+}
+
+static int getMageFormAttackPower()
+{
+	if(kheshig.mageForm == 1)
+	{
+		return kheshig.attack + (kheshig.attack * 35) / 100;
+	}
+	return kheshig.attack;
+}
+
+static int getMageFormDefensePower()
+{
+	if(kheshig.mageForm == 1)
+	{
+		return kheshig.defense + (kheshig.defense * 25) / 100;
+	}
+	return kheshig.defense;
+}
+
+static void checkMageFormState(int currentPossession)
+{
+	if(kheshig.mageForm == 0 && currentPossession >= kheshig.maxPossession)
+	{
+		kheshig.mageForm = 1;
+		appendWarLog("Demonic Possession awakened! Mage Form is active.\n");
+	}
+}
+
+static void resetMageFormForNextBattle()
+{
+	kheshig.mageForm = 0;
+	kheshig.activePossession = 0;
 }
 
 static void renderBattleScreen(int currentHP, int currentEnemyHP, int enemyIdx, int showActions)
@@ -310,7 +352,28 @@ static void renderBattleScreen(int currentHP, int currentEnemyHP, int enemyIdx, 
 			printf(".");
 		}
 	}
-	printf("]\n");
+	printf("]");
+
+	printf("\n\033[31m  Bar of demonic possession:\033[0m %d/%d \n  ",kheshig.activePossession, kheshig.maxPossession);
+	printf("[");
+	int l = 0;
+	float possessionRatio = (float)kheshig.activePossession/ kheshig.maxPossession;
+	if (possessionRatio < 0) possessionRatio = 0;
+	int kheshigPossessionBar = (int)(10 * possessionRatio);
+	while(l<10)
+	{
+		for(int a=0;a<kheshigPossessionBar;a++)
+		{
+			l++;
+			printf("|");
+		}
+		while(l<10)
+		{
+			l++;
+			printf(".");
+		}
+	}
+	printf("]");
 
 	printf("\n%s\n", viewLineRenderBattle);
 	printf("                   --- BATTLE LOG ---\n");
@@ -332,16 +395,20 @@ static void renderBattleScreen(int currentHP, int currentEnemyHP, int enemyIdx, 
 	}
 }
 
-void warPanel(int currentHP, int currentEnemyHP, int enemyIdx, int triggerEnemyAttack)
+void warPanel(int currentHP, int currentEnemyHP, int currentPossession, int enemyIdx, int triggerEnemyAttack)
 {
+	currentPossession = clampPossession(currentPossession);
+	kheshig.activePossession = currentPossession;
+	checkMageFormState(currentPossession);
+
 	if(currentHP <= 0 || currentEnemyHP <= 0)
 	{
-		checkBattleStatus(currentHP, currentEnemyHP, enemyIdx, triggerEnemyAttack);
+		checkBattleStatus(currentHP, currentEnemyHP, currentPossession, enemyIdx, triggerEnemyAttack);
 		return;
 	}
 	if(triggerEnemyAttack == 1)
 	{
-		checkBattleStatus(currentHP, currentEnemyHP, enemyIdx, 1);
+		checkBattleStatus(currentHP, currentEnemyHP, currentPossession, enemyIdx, 1);
 	}
 
 	renderBattleScreen(currentHP, currentEnemyHP, enemyIdx, 1);
@@ -360,6 +427,7 @@ void warPanel(int currentHP, int currentEnemyHP, int enemyIdx, int triggerEnemyA
 void escapeWar(int enemyIdx)
 {
 	char viewLineEscape[] = "=====================================================================";
+	resetMageFormForNextBattle();
 	system("cls");
 		int loss = (kheshig.gold * 15) / 100;
         printf("%s\n", viewLineEscape);
@@ -386,8 +454,11 @@ void escapeWar(int enemyIdx)
 		FirstIntroductionMenu();
 }
 
-void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
+void checkBattleStatus(int pHP, int eHP, int currentPossession, int enemyIdx, int triggerEnemyAttack)
 {
+	kheshig.activePossession = clampPossession(currentPossession);
+	checkMageFormState(kheshig.activePossession);
+
 	char viewLineBattle[] = "============================================================";
 	if(eHP <= 0)
 	{
@@ -484,6 +555,7 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
 		}
 
 		kheshig.activeHealth = pHP;
+		resetMageFormForNextBattle();
 		gameSave();
 
 		printf("\n%s\n", viewLineBattle);
@@ -561,6 +633,7 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
 			kheshig.gold -= loss;
 		}
 		kheshig.activeHealth = pHP;
+		resetMageFormForNextBattle();
 		gameSave();
 
 		printf("\n%s\n", viewLineBattle);
@@ -574,7 +647,8 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
 	{
 		if(triggerEnemyAttack == 1)
 		{
-			int baseEnemyDmg = enemyPool[enemyIdx].attack - kheshig.defense;
+			int playerDefense = getMageFormDefensePower();
+			int baseEnemyDmg = enemyPool[enemyIdx].attack - playerDefense;
 			if(baseEnemyDmg < 1) baseEnemyDmg = 1;
 			int chanceFactor = 10 + rand() % 10;
 			int scaledEnemyDmg = (chanceFactor * baseEnemyDmg) / 10;
@@ -588,10 +662,6 @@ void checkBattleStatus(int pHP, int eHP, int enemyIdx, int triggerEnemyAttack)
 			appendWarLog(line);
 
 		}
-		else
-		{
-		}
-		
 	}
 }
 
@@ -606,7 +676,8 @@ void defense(int pHP, int eHP, int enemyIdx)
 	}
 
 	int chance = rand() % 100;
-	int defDamage = enemyPool[enemyIdx].attack - kheshig.defense;
+	int playerDefense = getMageFormDefensePower();
+	int defDamage = enemyPool[enemyIdx].attack - playerDefense;
 	if(defDamage < 1) defDamage = 0;
 	if(chance<50)
 	{
@@ -620,11 +691,17 @@ void defense(int pHP, int eHP, int enemyIdx)
 			makeDefendLog(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].attack, defDamage);
 			appendWarLog(line);
 		}
-		warPanel(pHP-defDamage, eHP, enemyIdx, 1);
+		int nextPossession = kheshig.activePossession;
+		if(defDamage > 0)
+		{
+			nextPossession = clampPossession(nextPossession + 10);
+		}
+		warPanel(pHP-defDamage, eHP, nextPossession, enemyIdx, 1);
 	}
 	else
 	{
-		int counterBase = kheshig.attack - enemyPool[enemyIdx].defense;
+		int playerAttack = getMageFormAttackPower();
+		int counterBase = playerAttack - enemyPool[enemyIdx].defense;
 		if(counterBase < 1)
 		{
 			int heal = 1 + rand() % 2;
@@ -636,17 +713,18 @@ void defense(int pHP, int eHP, int enemyIdx)
 			char healLine[128];
 			snprintf(healLine, sizeof(healLine), "%s regains %d HP while you fail to counter!\n", enemyPool[enemyIdx].name, heal);
 			appendWarLog(healLine);
-			warPanel(pHP, healedEnemyHP, enemyIdx, 1);
+			warPanel(pHP, healedEnemyHP, kheshig.activePossession, enemyIdx, 1);
 		}
 		else
 		{
 			int variance = counterBase / 6;
 			if(variance < 1) variance = 1;
 			int counterDmg = applyDamageVariance(counterBase, variance);
+			int nextPossession = clampPossession(kheshig.activePossession + 5);
 			char counterLine[128];
 			makeCounterStrikeLog(counterLine, sizeof(counterLine), "Kheshig", enemyPool[enemyIdx].name, counterDmg);
 			appendWarLog(counterLine);
-			warPanel(pHP, eHP-counterDmg, enemyIdx, 1);
+			warPanel(pHP, eHP-counterDmg, nextPossession, enemyIdx, 1);
 		}
 	}
 }
@@ -657,7 +735,7 @@ void quickAttack(int pHP, int eHP, int enemyIdx)
 	if(kheshig.activeStamina<quickStaminaLose)
 	{
 		appendWarLog("You ran out of breath! Try to defend.\n");
-		warPanel(pHP, eHP, enemyIdx, 0);
+		warPanel(pHP, eHP, kheshig.activePossession, enemyIdx, 0);
 		return;
 	}
 	else
@@ -666,18 +744,21 @@ void quickAttack(int pHP, int eHP, int enemyIdx)
 		int chance = rand() % 100;
 		if(chance < 90)
 		{
-			int baseDmg = kheshig.attack - enemyPool[enemyIdx].defense;
+			int playerAttack = getMageFormAttackPower();
+			int baseDmg = playerAttack - enemyPool[enemyIdx].defense;
 			if(baseDmg < 1) baseDmg = 1;
 			int variance = baseDmg / 6;
 			if(variance < 1) variance = 1;
 			int dmg = applyDamageVariance(baseDmg, variance);
+			int nextPossession = clampPossession(kheshig.activePossession + 8);
 			char line[128];
 			makeAttackLogPlayer(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].name, dmg);
 			appendWarLog(line);
 			
 			if(eHP - dmg > 0)
 			{
-				int baseEnemyDmg = enemyPool[enemyIdx].attack - kheshig.defense;
+				int playerDefense = getMageFormDefensePower();
+				int baseEnemyDmg = enemyPool[enemyIdx].attack - playerDefense;
 				if(baseEnemyDmg < 1) baseEnemyDmg = 1;
 				int chanceFactor = 10 + rand() % 10;
 				int scaledEnemyDmg = (chanceFactor * baseEnemyDmg) / 10;
@@ -685,20 +766,21 @@ void quickAttack(int pHP, int eHP, int enemyIdx)
 				int varianceEnemy = scaledEnemyDmg / 6;
 				if(varianceEnemy < 1) varianceEnemy = 1;
 				int enemyDmg = applyDamageVariance(scaledEnemyDmg, varianceEnemy);
+				nextPossession = clampPossession(nextPossession + 10);
 				char eLine[128];
 				makeAttackLogEnemy(eLine, sizeof(eLine), enemyPool[enemyIdx].name, "Kheshig", enemyDmg);
 				appendWarLog(eLine);
-				warPanel(pHP - enemyDmg, eHP - dmg, enemyIdx, 0);
+				warPanel(pHP - enemyDmg, eHP - dmg, nextPossession, enemyIdx, 0);
 			}
 			else
 			{
-				warPanel(pHP, eHP - dmg, enemyIdx, 0);
+				warPanel(pHP, eHP - dmg, nextPossession, enemyIdx, 0);
 			}
 		}
 		else
 		{
 			appendWarLog("Kheshig missed their Quick Attack!\n");
-			warPanel(pHP, eHP, enemyIdx, 0);
+			warPanel(pHP, eHP, kheshig.activePossession, enemyIdx, 0);
 		}
 	}
 }
@@ -709,7 +791,7 @@ void normalAttack(int pHP, int eHP, int enemyIdx)
 	if(kheshig.activeStamina<normalStaminaLose)
 	{
 		appendWarLog("You ran out of breath! Try a lighter move.\n");
-		warPanel(pHP, eHP, enemyIdx, 0);
+		warPanel(pHP, eHP, kheshig.activePossession, enemyIdx, 0);
 		return;
 	}
 
@@ -719,7 +801,8 @@ void normalAttack(int pHP, int eHP, int enemyIdx)
 		int chance = rand() % 100;
 		if(chance < 85)
 		{
-			int baseDmg = kheshig.attack - enemyPool[enemyIdx].defense;
+			int playerAttack = getMageFormAttackPower();
+			int baseDmg = playerAttack - enemyPool[enemyIdx].defense;
 			if(baseDmg < 1) baseDmg = 1;
 			int scaledDmg = (int)(1.2 * baseDmg);
 			if(scaledDmg < 1) scaledDmg = 1;
@@ -730,13 +813,15 @@ void normalAttack(int pHP, int eHP, int enemyIdx)
 			if(quickVariance < 1) quickVariance = 1;
 			int quickEquivalent = applyDamageVariance(baseDmg, quickVariance);
 			if(dmg < quickEquivalent) dmg = quickEquivalent;
+			int nextPossession = clampPossession(kheshig.activePossession + 15);
 			char line[128];
 			makeAttackLogPlayer(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].name, dmg);
 			appendWarLog(line);
 			
 			if(eHP - dmg > 0)
 			{
-				int baseEnemyDmg = enemyPool[enemyIdx].attack - kheshig.defense;
+				int playerDefense = getMageFormDefensePower();
+				int baseEnemyDmg = enemyPool[enemyIdx].attack - playerDefense;
 				if(baseEnemyDmg < 1) baseEnemyDmg = 1;
 				int chanceFactor = 10 + rand() % 10;
 				int scaledEnemyDmg = (chanceFactor * baseEnemyDmg) / 10;
@@ -744,20 +829,21 @@ void normalAttack(int pHP, int eHP, int enemyIdx)
 				int varianceEnemy = scaledEnemyDmg / 6;
 				if(varianceEnemy < 1) varianceEnemy = 1;
 				int enemyDmg = applyDamageVariance(scaledEnemyDmg, varianceEnemy);
+				nextPossession = clampPossession(nextPossession + 10);
 				char eLine[128];
 				makeAttackLogEnemy(eLine, sizeof(eLine), enemyPool[enemyIdx].name, "Kheshig", enemyDmg);
 				appendWarLog(eLine);
-				warPanel(pHP - enemyDmg, eHP - dmg, enemyIdx, 0);
+				warPanel(pHP - enemyDmg, eHP - dmg, nextPossession, enemyIdx, 0);
 			}
 			else
 			{
-				warPanel(pHP, eHP - dmg, enemyIdx, 0);
+				warPanel(pHP, eHP - dmg, nextPossession, enemyIdx, 0);
 			}
 		}
 		else
 		{
 			appendWarLog("Kheshig missed their Normal Attack!\n");
-			warPanel(pHP, eHP, enemyIdx, 0);
+			warPanel(pHP, eHP, kheshig.activePossession, enemyIdx, 0);
 		}
 	}
 }
@@ -768,7 +854,7 @@ void heavyAttack(int pHP, int eHP, int enemyIdx)
 	if(kheshig.activeStamina<heavyStaminaLose)
 	{
 		appendWarLog("You ran out of breath! Try a lighter move.\n");
-		warPanel(pHP, eHP, enemyIdx, 0);
+		warPanel(pHP, eHP, kheshig.activePossession, enemyIdx, 0);
 		return;
 	}
 
@@ -778,20 +864,23 @@ void heavyAttack(int pHP, int eHP, int enemyIdx)
 		int chance = rand() % 100;
 		if(chance < 70)
 		{
-			int baseDmg = kheshig.attack - enemyPool[enemyIdx].defense;
+			int playerAttack = getMageFormAttackPower();
+			int baseDmg = playerAttack - enemyPool[enemyIdx].defense;
 			if(baseDmg < 1) baseDmg = 1;
 			int scaledDmg = 2 * baseDmg;
 			if(scaledDmg < 1) scaledDmg = 1;
 			int variance = scaledDmg / 6;
 			if(variance < 1) variance = 1;
 			int dmg = applyDamageVariance(scaledDmg, variance);
+			int nextPossession = clampPossession(kheshig.activePossession + 25);
 			char line[128];
 			makeAttackLogPlayer(line, sizeof(line), "Kheshig", enemyPool[enemyIdx].name, dmg);
 			appendWarLog(line);
 			
 			if(eHP - dmg > 0)
 			{
-				int baseEnemyDmg = enemyPool[enemyIdx].attack - kheshig.defense;
+				int playerDefense = getMageFormDefensePower();
+				int baseEnemyDmg = enemyPool[enemyIdx].attack - playerDefense;
 				if(baseEnemyDmg < 1) baseEnemyDmg = 1;
 				int chanceFactor = 10 + rand() % 10;
 				int scaledEnemyDmg = (chanceFactor * baseEnemyDmg) / 10;
@@ -799,20 +888,21 @@ void heavyAttack(int pHP, int eHP, int enemyIdx)
 				int varianceEnemy = scaledEnemyDmg / 6;
 				if(varianceEnemy < 1) varianceEnemy = 1;
 				int enemyDmg = applyDamageVariance(scaledEnemyDmg, varianceEnemy);
+				nextPossession = clampPossession(nextPossession + 10);
 				char eLine[128];
 				makeAttackLogEnemy(eLine, sizeof(eLine), enemyPool[enemyIdx].name, "Kheshig", enemyDmg);
 				appendWarLog(eLine);
-				warPanel(pHP - enemyDmg, eHP - dmg, enemyIdx, 0);
+				warPanel(pHP - enemyDmg, eHP - dmg, nextPossession, enemyIdx, 0);
 			}
 			else
 			{
-				warPanel(pHP, eHP - dmg, enemyIdx, 0);
+				warPanel(pHP, eHP - dmg, nextPossession, enemyIdx, 0);
 			}
 		}
 		else
 		{
 			appendWarLog("Kheshig missed their Heavy Attack!\n");
-			warPanel(pHP, eHP, enemyIdx, 0);
+			warPanel(pHP, eHP, kheshig.activePossession, enemyIdx, 0);
 		}
 	}
 }
@@ -890,11 +980,12 @@ void cursorControlWar()
 			if(listRowWar==0)
         	{
 				clearWarLog();
+				resetMageFormForNextBattle();
 				int selectedEnemyIdx = getRandomEnemyIndex(kheshig.level);
 				char startMsg[150];
     			sprintf(startMsg, "A wild %s appeared in the %s!\n",enemyPool[selectedEnemyIdx].name, enemyPool[selectedEnemyIdx].place);
 				appendWarLog(startMsg);
-				warPanel(kheshig.activeHealth, enemyPool[selectedEnemyIdx].health, selectedEnemyIdx, 0);
+				warPanel(kheshig.activeHealth, enemyPool[selectedEnemyIdx].health, kheshig.activePossession, selectedEnemyIdx, 0);
 			}
 			else if(listRowWar==1)
 			{

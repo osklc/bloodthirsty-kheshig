@@ -12,6 +12,8 @@ typedef struct Player{
     int activeHealth;
     int activeStamina;
     int maxStamina;
+    int activePossession;
+    int maxPossession;
     int gold;
     int level;
 	int attack;
@@ -20,6 +22,7 @@ typedef struct Player{
     int currentDay;
     int loopCount;
     int currentTimePeriod;
+    int mageForm;
 }Player;
 extern struct Player kheshig;
 
