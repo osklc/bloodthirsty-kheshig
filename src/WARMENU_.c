@@ -333,7 +333,14 @@ static void renderBattleScreen(int currentHP, int currentEnemyHP, int enemyIdx, 
 	}
 	printf("]");
 
-	printf("\n\033[33m  Stamina:\033[0m %d/%d \n  ",kheshig.activeStamina ,kheshig.maxStamina);
+	if(kheshig.mageForm == 1)
+	{
+		printf("\n\033[31m  Rage:\033[0m %d/%d \n  ",kheshig.activeStamina ,kheshig.maxStamina);
+	}
+	else
+	{
+		printf("\n\033[33m  Stamina:\033[0m %d/%d \n  ",kheshig.activeStamina ,kheshig.maxStamina);
+	}
 	printf("[");
 	int k = 0;
 	float staminaRatio = (float)kheshig.activeStamina / kheshig.maxStamina;
